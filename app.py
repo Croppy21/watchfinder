@@ -20,7 +20,12 @@ def search_movie(query: str):
         "accept": "application/json"
     }
 
-    return requests.get(url, headers=headers, params={"query": query}).json()
+    response = requests.get(url, headers=headers, params={"query": query})
+
+    print(response.status_code)
+    print(response.text)
+
+    return response.json()
 
 
 def get_watch_providers(movie_id: int):
