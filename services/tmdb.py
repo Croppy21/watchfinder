@@ -29,3 +29,14 @@ def get_movie(movie_id: int):
 
 def get_watch_providers(movie_id: int):
     return _get(f"{BASE_URL}/movie/{movie_id}/watch/providers")
+
+def search_multi(query: str):
+    return _get(f"{BASE_URL}/search/multi", {"query": query})
+
+
+def get_tv_show(tv_id: int):
+    return _get(f"{BASE_URL}/tv/{tv_id}")
+
+
+def get_tv_watch_providers(tv_id: int):
+    return _get(f"{BASE_URL}/tv/{tv_id}/watch/providers")
