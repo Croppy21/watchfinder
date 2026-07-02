@@ -9,3 +9,5 @@ TMDB_READ_ACCESS_TOKEN = (
     .replace("\n", "")
     .replace("\r", "")
 )
+if not TMDB_READ_ACCESS_TOKEN:
+    raise RuntimeError("TMDB_READ_ACCESS_TOKEN is missing or not loaded")

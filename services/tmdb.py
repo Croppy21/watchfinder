@@ -3,7 +3,6 @@ from config import TMDB_READ_ACCESS_TOKEN
 
 BASE_URL = "https://api.themoviedb.org/3"
 
-
 def _get(url: str, params: dict | None = None):
     headers = {
         "Authorization": f"Bearer {TMDB_READ_ACCESS_TOKEN}",
@@ -40,3 +39,9 @@ def get_tv_show(tv_id: int):
 
 def get_tv_watch_providers(tv_id: int):
     return _get(f"{BASE_URL}/tv/{tv_id}/watch/providers")
+
+
+def debug_auth():
+    url = f"{BASE_URL}/authentication"
+    return _get(url)
+print(debug_auth())

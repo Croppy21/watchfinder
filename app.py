@@ -16,7 +16,6 @@ from utils.formatting import (
 
 app = FastAPI()
 
-
 # -------------------------
 # HOME
 # -------------------------
