@@ -1,0 +1,43 @@
+{% if results %}
+
+<h2>Results</h2>
+
+{% for item in results %}
+
+<button class="result-btn"
+        hx-get="/{{ 'tv' if item.media_type == 'tv' else 'movie' }}/{{ item.id }}"
+        hx-target="body">
+
+    <img src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}">
+
+    <div>
+        <b>{{ item.title or item.name }}</b>
+
+        <small class="tag">{{ item.media_type.upper() }}</small>
+
+        <small>
+            {{ (item.release_date or item.first_air_date or '')[:4] }}
+        </small>
+    </div>
+
+</button>
+
+{% endfor %}
+
+{% elif suggestions %}
+
+<h3>No exact results. Did you mean:</h3>
+
+{% for s in suggestions %}
+<button class="result-btn"
+        hx-get="/search?query={{ s }}"
+        hx-target="#results">
+    {{ s }}
+</button>
+{% endfor %}
+
+{% else %}
+
+<h3>No results found</h3>
+
+{% endif %}

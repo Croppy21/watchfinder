@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<button id="back-btn" hx-get="/" hx-target="body">← Back</button>
+
+<div class="hero"
+     style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')">
+</div>
+
+<div class="details">
+
+    <img src="{{ poster }}">
+
+    <div>
+        <h2>{{ tv.name }}</h2>
+
+        <p><b>First Air Date:</b> {{ tv.first_air_date[:4] }}</p>
+
+        <div class="rating">{{ tv.vote_average }}</div>
+
+        <p>{{ tv.overview }}</p>
+    </div>
+
+</div>
+
+<h3>Where to watch (AU)</h3>
+
+{{ providers_html | safe }}
+
+{% endblock %}

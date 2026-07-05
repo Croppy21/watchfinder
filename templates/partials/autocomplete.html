@@ -1,0 +1,29 @@
+<div class="autocomplete-box">
+
+{% set current = None %}
+
+{% for item in results %}
+
+    {% if item.media_type != current %}
+        {% set current = item.media_type %}
+        <div class="autocomplete-header">
+            {{ item.media_type.upper() }}
+        </div>
+    {% endif %}
+
+    <button class="autocomplete-item"
+            hx-get="/{{ 'tv' if item.media_type == 'tv' else 'movie' }}/{{ item.id }}"
+            hx-target="body">
+
+        <img src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}">
+
+        <div>
+            <strong>{{ item.title or item.name }}</strong>
+            <small>{{ (item.release_date or item.first_air_date or '')[:4] }}</small>
+        </div>
+
+    </button>
+
+{% endfor %}
+
+</div>

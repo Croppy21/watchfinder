@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<button id="back-btn" hx-get="/" hx-target="body">← Back</button>
+
+<div class="hero"
+     style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')">
+</div>
+
+<div class="details">
+
+    <img src="{{ poster }}">
+
+    <div>
+        <h2>{{ movie.title }}</h2>
+
+        <div class="rating">{{ movie.vote_average }}</div>
+
+        <p>{{ movie.overview }}</p>
+    </div>
+
+</div>
+
+<h3>Where to watch (AU)</h3>
+
+{{ providers_html | safe }}
+
+{% endblock %}
