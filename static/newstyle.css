@@ -1,0 +1,437 @@
+/* ---------- RESET ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- BASE ---------- */
+
+body {
+  background: #f4f1ec;
+  color: #252525;
+  font-family: "Segoe UI", Arial, sans-serif;
+  line-height: 1.5;
+  font-size: 32px;
+}
+
+/* ---------- LAYOUT ---------- */
+
+.container {
+  width: 100%;
+  padding: 14px;
+}
+
+/* ---------- TYPOGRAPHY ---------- */
+
+h1 {
+  text-align: center;
+  font-size: 5.2rem;
+  margin: 20px 0 10px;
+  color: #222222;
+}
+
+.subtitle {
+  text-align: center;
+  color: #77716b;
+  font-size: 24px;
+  margin-bottom: 25px;
+}
+
+h2,
+h3,
+p {
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+
+/* ---------- SEARCH ---------- */
+
+.search-container {
+  width: 100%;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-form input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #d8d2ca;
+  background: #ffffff;
+  color: #252525;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(40, 35, 30, 0.06);
+}
+
+.search-form input::placeholder {
+  color: #99928a;
+}
+
+.search-form input:focus {
+  outline: 2px solid #4f7cff;
+  border-color: #4f7cff;
+}
+
+.search-form button {
+  display: none;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  background: #3f6fe5;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #315dcc;
+}
+
+/* ---------- AUTOCOMPLETE ---------- */
+
+#autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  margin-top: 6px;
+}
+
+.autocomplete-box {
+  background: #ffffff;
+  border: 1px solid #ddd6ce;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(50, 45, 40, 0.18);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 60px;
+  padding: 12px 16px;
+  background: #ffffff;
+  color: #252525;
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item:active {
+  background: #f1eee9;
+}
+
+.media-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.autocomplete-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.autocomplete-title {
+  color: #252525;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.autocomplete-year {
+  color: #88817a;
+  font-size: 14px;
+}
+
+/* ---------- RESULTS ---------- */
+
+#results {
+  width: 100%;
+  padding: 0;
+}
+
+.result-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #ded8d0;
+  border-radius: 14px;
+
+  box-shadow: 0 3px 10px rgba(50, 45, 40, 0.07);
+}
+
+.result-btn:hover {
+  background: #faf8f5;
+}
+
+.result-btn img {
+  width: 55px;
+  height: 82px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.result-btn div {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.tag {
+  color: #3f6fe5;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ---------- DETAILS ---------- */
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #ded8d0;
+
+  padding: 16px;
+
+  border-radius: 18px;
+
+  box-shadow: 0 5px 20px rgba(50, 45, 40, 0.08);
+}
+
+.details img {
+  width: 100%;
+  max-width: 260px;
+  margin: auto;
+  border-radius: 14px;
+}
+
+.details h2 {
+  font-size: 32px;
+  color: #252525;
+}
+
+/* ---------- RATING ---------- */
+
+.rating {
+  display: inline-block;
+  background: #e7f5df;
+  color: #287522;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 24px;
+  margin: 10px 0;
+}
+
+/* ---------- PROVIDERS ---------- */
+
+ul {
+  padding: 0;
+  margin: 10px 0 20px;
+}
+
+li {
+  display: inline-block;
+  padding: 8px 14px;
+  margin: 6px 6px 0 0;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 600;
+  background: #e8e4df;
+  color: #38332f;
+  border: 1px solid #d7d0c8;
+}
+
+/* provider colours */
+li[data-provider*="netflix"] {
+  background: #e50914;
+  color: #000;
+}
+li[data-provider*="amazon"] {
+  background: #00a8e1;
+  color: #fff;
+}
+li[data-provider*="disney"] {
+  background: #113ccf;
+  color: #fff;
+}
+li[data-provider*="apple"] {
+  background: #000;
+  color: #f5f5f5;
+}
+li[data-provider*="hulu"] {
+  background: #1ce783;
+  color: #0b1a0f;
+}
+li[data-provider*="justwatch tv"] {
+  background: #f5c518;
+  color: #000;
+}
+li[data-provider*="hbo"] {
+  background: #5f2eea;
+  color: #fff;
+}
+li[data-provider*="youtube"] {
+  background: #ff0000;
+  color: #fff;
+}
+li[data-provider*="foxtel"] {
+  background: #ff6600;
+  color: #fff;
+}
+li[data-provider*="google play"] {
+  background: #34a853;
+  color: #fff;
+}
+li[data-provider*="stan"] {
+  background: #0077ff;
+  color: #fff;
+}
+li[data-provider*="binge"] {
+  background: #00e676;
+  color: #0b1a0f;
+}
+li[data-provider*="paramount"] {
+  background: #0064ff;
+  color: #fff;
+}
+li[data-provider*="britbox"] {
+  background: #00a3e0;
+  color: #fff;
+}
+li[data-provider*="mubi"] {
+  background: #1a1a1a;
+  color: #f5c542;
+}
+li[data-provider*="sbs"] {
+  background: #d8db00;
+  color: #080808;
+}
+li[data-provider*="fetch"] {
+  background: #00a3e0;
+  color: #fff;
+}
+
+/* ---------- HERO ---------- */
+
+.hero {
+  position: relative;
+  height: 320px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to top,
+    rgba(244, 241, 236, 0.95),
+    rgba(244, 241, 236, 0.25),
+    transparent
+  );
+}
+
+#back-btn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #3f6fe5;
+  color: white;
+  font-size: 24px;
+  margin: 10px;
+}
+
+/* =========================================
+DESKTOP
+========================================= */
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+  }
+
+  .search-form {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .search-form button {
+    display: block;
+    padding: 16px 22px;
+  }
+
+  .details {
+    flex-direction: row;
+    padding: 22px;
+  }
+
+  .details img {
+    width: 180px;
+  }
+
+  .details h2 {
+    font-size: 28px;
+  }
+
+  #results {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 20px;
+  }
+
+  .result-btn {
+    padding: 14px;
+  }
+}

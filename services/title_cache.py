@@ -51,7 +51,7 @@ def _add_item(item, key: str, media_type: str):
 
     titles_cache.append({
         "title": title,
-        "clean_title": clean,   # 🔥 NEW FIELD (important for fuzzy search)
+        "clean_title": clean,
         "id": item.get("id"),
         "type": media_type
     })

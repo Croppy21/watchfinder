@@ -6,23 +6,40 @@
 
 <p class="subtitle">Find where to stream movies and TV shows</p>
 
-<form class="search-form"
-      hx-get="/search"
-      hx-swap="innerHTML"
-      hx-target="#results">
 
-    <input name="query"
-       id="search"
-       placeholder="Search movies or TV shows..."
-       autocomplete="off"
-       required
+<div class="search-container">
 
-       hx-get="/autocomplete"
-       hx-trigger="keyup changed delay:200ms"
-       hx-target="#autocomplete"
-       hx-swap="innerHTML">
+    <form class="search-form"
+          hx-get="/search"
+          hx-target="#results"
+          hx-swap="innerHTML">
 
-    <button type="submit">Search</button>
-</form>
-<div id="autocomplete"></div>
+        <div class="input-wrapper">
+
+            <input 
+                name="query"
+                id="search"
+                placeholder="Search movies or TV shows..."
+                autocomplete="off"
+                required
+
+                hx-get="/autocomplete"
+                hx-trigger="input changed delay:200ms"
+                hx-target="#autocomplete"
+                hx-swap="innerHTML"
+            >
+
+            <div id="autocomplete"></div>
+
+        </div>
+
+
+        <button type="submit" class="search-button">
+            Search
+        </button>
+
+    </form>
+
+</div>
+
 {% endblock %}

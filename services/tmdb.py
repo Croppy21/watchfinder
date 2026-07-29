@@ -1,5 +1,7 @@
 import requests
+
 from config import TMDB_READ_ACCESS_TOKEN
+
 
 BASE_URL = "https://api.themoviedb.org/3"
 
@@ -10,12 +12,21 @@ def _get(url: str, params: dict | None = None):
         "accept": "application/json"
     }
 
-    response = requests.get(url, headers=headers, params=params or {})
+    try:
+        response = requests.get(
+            url,
+            headers=headers,
+            params=params or {},
+            timeout=10
+        )
 
-    if response.status_code != 200:
-        print("TMDB ERROR:", response.status_code, response.text)
+        response.raise_for_status()
 
-    return response.json()
+        return response.json()
+
+    except requests.RequestException as e:
+        print("TMDB ERROR:", e)
+        return {}
 
 
 def search_movie(query: str):

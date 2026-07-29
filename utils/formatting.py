@@ -20,6 +20,10 @@ def normalize_provider_name(name: str) -> str:
         "Max": "HBO Max",
         "Apple TV Store": "Apple TV",
         "Google Play Movies": "Google Play",
+        "Paramount Plus Premium": "Paramount+",
+        "Paramount Plus": "Paramount+",
+        "Paramount Plus Basic": "Paramount+",
+        "Paramount+ Amazon Channel": "Paramount+"
     }
 
     if name in replacements:
