@@ -49,3 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+document.addEventListener("htmx:afterSwap", function(event) {
+    if (event.detail.target.id === "autocomplete") {
+        requestAnimationFrame(() => {
+            event.detail.target.style.display = "none";
+            event.detail.target.offsetHeight;
+            event.detail.target.style.display = "block";
+        });
+    }
+});
