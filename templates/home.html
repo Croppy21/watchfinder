@@ -1,45 +1,59 @@
 {% extends "base.html" %}
-
 {% block content %}
+{% include "partials/top_nav.html" %}
+<section class="home-header">
+    <h1>🎬 WatchFinder</h1>
 
-<h1>🎬 WatchFinder</h1>
-
-<p class="subtitle">Find where to stream movies and TV shows</p>
-
-
-<div class="search-container">
-
-    <form class="search-form"
-          hx-get="/search"
-          hx-target="#results"
-          hx-swap="innerHTML">
-
-        <div class="input-wrapper">
-
-            <input 
-                name="query"
-                id="search"
-                placeholder="Search movies or TV shows..."
-                autocomplete="off"
-                required
-
-                hx-get="/autocomplete"
-                hx-trigger="input changed delay:200ms"
-                hx-target="#autocomplete"
-                hx-swap="innerHTML"
-            >
-
-            <div id="autocomplete"></div>
-
-        </div>
+    <p class="subtitle">
+        Find where to stream movies and TV shows.
+    </p>
 
 
-        <button type="submit" class="search-button">
-            Search
-        </button>
+    <a href="/search" class="home-action">
+        Start Searching
+    </a>
 
-    </form>
+</section>
 
-</div>
+
+
+<section class="info-section">
+
+    <h2>How it works</h2>
+
+    <p>
+        Search for any movie or TV show and discover
+        which streaming services are available.
+    </p>
+
+</section>
+
+
+
+<section class="info-section">
+
+    <h2>Features</h2>
+
+    <p>
+        ✓ Find streaming providers
+    </p>
+    <p>
+        ✓ Browse movies and TV shows
+    </p>
+
+</section>
+
+
+
+<section class="info-section">
+
+    <h2>Account</h2>
+
+    <p>
+        Login and personal watchlists/favourites are coming soon.
+    </p>
+
+</section>
+
 
 {% endblock %}

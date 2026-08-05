@@ -8,6 +8,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  padding-bottom: 72px;
 }
 
 /* ---------- BASE ---------- */
@@ -47,6 +48,174 @@ h3,
 p {
   font-size: 16px;
   margin: 0 0 10px;
+}
+
+h3 {
+  padding: 0 16px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+
+/* ---------- navigation ---------- */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 64px;
+   background: rgba(244, 241, 236, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  /* Ensures safe area padding for modern iPhones (notch/home bar) */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* ---------- Nav Icons ---------- */
+.nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+  text-decoration: none;
+  color: #8c857b;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.nav-item img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.5;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.nav-item.active img {
+  opacity: 1;
+}
+
+.nav-item.active {
+  color: #000000;
+  font-weight: 700;
+}
+
+
+/* ---------- Top-nav ---------- */
+/* ---------- Top Navigation ---------- */
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px 0 20px;
+}
+
+
+.brand {
+    color: #252525;
+    text-decoration: none;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+
+.profile-button img {
+    width: 28px;
+    height: 28px;
+
+    opacity: 0.7;
+
+    transition: opacity 0.2s ease;
+}
+
+
+.profile-button img:hover {
+    opacity: 1;
+}
+/* ---------- HOME PAGE ---------- */
+
+.home-header {
+  text-align: center;
+  padding: 35px 15px 25px;
+}
+
+.profile-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.profile-button img {
+    width: 32px;
+    height: 32px;
+    opacity: 0.7;
+}
+
+.home-header h1 {
+  margin-bottom: 10px;
+}
+
+
+.home-action {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 14px 26px;
+  background: #3f6fe5;
+  color: white;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(50, 45, 40, 0.15);
+}
+
+.WIP-saved-nav a {
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #e5a33f;
+}
+
+.home-action:active {
+  transform: scale(0.98);
+}
+
+
+.info-section {
+  background: #ffffff;
+  padding: 20px;
+  margin-top: 18px;
+  border-radius: 16px;
+  border: 1px solid #ded8d0;
+  box-shadow: 0 3px 10px rgba(50, 45, 40, 0.07);
+}
+
+
+.info-section h2 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+}
+
+
+.info-section p {
+  color: #55504a;
+  margin-bottom: 8px;
 }
 
 /* ---------- SEARCH ---------- */
@@ -228,40 +397,68 @@ button:hover {
 /* ---------- DETAILS ---------- */
 
 .details {
+  position: relative;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  background: #ffffff;
-  border: 1px solid #ded8d0;
-  padding: 8px;
-  border-radius: 18px;
-  box-shadow: 0 5px 20px rgba(50, 45, 40, 0.08);
-  font-size: 16px;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 16px;
+  background: transparent; 
+  border: none;         
+  box-shadow: none;     
 }
 
 .details img {
-  width: 100%;
-  max-width: 260px;
-  margin: auto;
-  border-radius: 14px;
+  width: 105px;
+  height: 155px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  margin: 0; /* Clears prior margin: auto */
+}
+
+.details > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0; /* Prevents overflow issues on mobile */
 }
 
 .details h2 {
-  font-size: 16px;
-  color: #252525;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.details p {
+  font-size: 14px;
+  color: #55504a;
+  margin: 0;
+  line-height: 1.4;
 }
 
 /* ---------- RATING ---------- */
-
 .rating {
-  display: inline-block;
-  background: #e7f5df;
-  color: #287522;
-  padding: 6px 12px;
-  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  background: #252525;
+  color: #ffc107; /* Gold accent for rating */
+  padding: 4px 10px;
+  border-radius: 8px;
   font-weight: 700;
-  font-size: 16px;
-  margin: 10px 0;
+  font-size: 13px;
+  margin: 2px 0 6px 0;
+}
+
+.rating::before {
+  content: "★ ";
+  margin-right: 4px;
 }
 
 /* ---------- PROVIDERS ---------- */
@@ -357,35 +554,53 @@ li[data-provider*="fetch"] {
 
 .hero {
   position: relative;
-  height: 320px;
-  border-radius: 18px;
-  margin-bottom: 20px;
+  height: 220px;
   background-size: cover;
   background-position: center;
+  border-radius: 0 0 16px 16px;
   overflow: hidden;
+  margin-bottom: 0;
 }
 
 .hero::after {
   content: "";
   position: absolute;
   inset: 0;
-
   background: linear-gradient(
-    to top,
-    rgba(244, 241, 236, 1),
-    rgba(244, 241, 236, 0.55),
-    rgba(244, 241, 236, 0.1)
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    transparent 50%,
+    rgba(244, 241, 236, 1) 100%
   );
 }
 
 #back-btn {
-  padding: 10px 14px;
-  border-radius: 12px;
-  background: #3f6fe5;
-  color: white;
-  font-size: 16px;
-  margin: 10px;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 999px;
+  background: rgb(83, 0, 228);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease;
 }
+
+#back-btn:active {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+
 
 /* =========================================
 DESKTOP
