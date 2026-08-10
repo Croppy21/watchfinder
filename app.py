@@ -11,7 +11,11 @@ from services.tmdb import (
     get_tv_watch_providers,
 )
 
-from utils.search import rank_results, did_you_mean_top3
+from utils.search import (
+    rank_results,
+    rank_autocomplete_results,
+    did_you_mean_top3
+) 
 from utils.formatting import poster_url, build_providers_html
 
 
@@ -44,25 +48,25 @@ def home(request: Request):
 
 @app.get("/search", response_class=HTMLResponse)
 def search_page(request: Request):
-
     return templates.TemplateResponse(
         request=request,
         name="search.html",
-        context={
-            "request": request
-        }
+        context={"request": request}
     )
 
 
 # -------------------------
 # SEARCH RESULTS (HTMX)
 # -------------------------
-
 @app.get("/api/search", response_class=HTMLResponse)
 def search(request: Request, query: str):
 
     data = search_multi(query)
-    results = data.get("results", [])
+
+    results = [
+        item for item in data.get("results", [])
+        if item.get("media_type") in ("movie", "tv")
+    ]
 
     if not results:
 
@@ -78,7 +82,6 @@ def search(request: Request, query: str):
                 "query": query
             }
         )
-
 
     results = rank_results(query, results)
 
@@ -152,7 +155,12 @@ def autocomplete(request: Request, query: str):
 
     data = search_multi(query)
 
-    results = rank_results(query, data.get("results", []))[:8]
+    results = [
+        item for item in data.get("results", [])
+        if item.get("media_type") in ("movie", "tv")
+    ]
+
+    results = rank_autocomplete_results(query, results)[:8]
 
     return templates.TemplateResponse(
         request=request,
@@ -163,6 +171,9 @@ def autocomplete(request: Request, query: str):
         }
     )
 
+#-------------------------
+# WATCHLIST PAGE
+#------------------------
 @app.get("/watchlist", response_class=HTMLResponse)
 def watchlist(request: Request):
 
@@ -174,6 +185,9 @@ def watchlist(request: Request):
         }
     )
     
+#-------------------------
+# PROFILE PAGE
+#------------------------
 @app.get("/profile", response_class=HTMLResponse)
 def profile(request: Request):
 
