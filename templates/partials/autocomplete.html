@@ -1,35 +1,35 @@
 <div class="autocomplete-box">
+  {% for item in results %}
 
-    {% for item in results %}
+  <button
+    class="autocomplete-item"
+    type="button"
+    onclick="document.getElementById('search').blur()"
+    hx-get="/{{ 'tv' if item.media_type == 'tv' else 'movie' }}/{{ item.id }}"
+    hx-target="body"
+  >
+    {% if item.poster_path %}
+    <img
+      class="autocomplete-poster"
+      src="https://image.tmdb.org/t/p/w92{{ item.poster_path }}"
+      alt=""
+    />
+    {% endif %}
 
-        <button class="autocomplete-item"
-                type="button"
-                onclick="document.getElementById('search').blur()"
-                hx-get="/{{ 'tv' if item.media_type == 'tv' else 'movie' }}/{{ item.id }}"
-                hx-target="body">
+    <div class="autocomplete-info">
+      <strong class="autocomplete-title">
+        {{ item.title or item.name }}
+      </strong>
 
-            <span class="media-icon">
-                {% if item.media_type == "movie" %}
-                    🎬
-                {% else %}
-                    📺
-                {% endif %}
-            </span>
+      <div class="autocomplete-meta">
+        <small class="tag"> {{ item.media_type.upper() }} </small>
 
-            <div class="autocomplete-info">
+        <small class="autocomplete-year">
+          {{ (item.release_date or item.first_air_date or '')[:4] }}
+        </small>
+      </div>
+    </div>
+  </button>
 
-                <strong class="autocomplete-title">
-                    {{ item.title or item.name }}
-                </strong>
-
-                <small class="autocomplete-year">
-                    {{ (item.release_date or item.first_air_date or '')[:4] }}
-                </small>
-
-            </div>
-
-        </button>
-
-    {% endfor %}
-
+  {% endfor %}
 </div>
