@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "partials/top_nav.html" %}
+
+<div class="auth-page">
+
+    <div class="auth-header">
+        <h1>Welcome back</h1>
+        <p>Log in to access your WatchFinder account.</p>
+    </div>
+
+
+    {% if error %}
+        <div class="auth-message error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="post" action="/login" class="auth-form">
+
+        <div class="form-field">
+            <label for="login">Username or email</label>
+
+            <input
+                type="text"
+                id="login"
+                name="login"
+                required
+                autocomplete="username"
+                placeholder="Username or email"
+            >
+        </div>
+
+        <div class="form-field">
+            <label for="password">Password</label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                autocomplete="current-password"
+                placeholder="Enter your password"
+            >
+        </div>
+
+        <button type="submit" class="auth-button">
+            Log in
+        </button>
+
+    </form>
+
+    <p class="auth-footer">
+        Don't have an account?
+        <a href="/register">Create one</a>
+    </p>
+
+</div>
+
+{% endblock %}

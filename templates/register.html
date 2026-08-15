@@ -1,50 +1,64 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
+%}
 
-{% block content %}
+<div class="auth-page">
+  <div class="auth-header">
+    <h1>Create your account</h1>
+    <p>Save shows, build your watchlist and keep everything in one place.</p>
+  </div>
 
-{% include "partials/top_nav.html" %}
+  {% if error %}
+  <div class="auth-message error">{{ error }}</div>
+  {% endif %}
 
-{% if error %}
-    <p>{{ error }}</p>
-{% endif %}
+  <form method="post" action="/register" class="auth-form">
+    <div class="form-field">
+      <label for="username">Username</label>
 
-{% if success %}
-    <p>{{ success }}</p>
-{% endif %}
+      <input
+        type="text"
+        id="username"
+        name="username"
+        required
+        maxlength="50"
+        autocomplete="username"
+        placeholder="Choose a username"
+        value="{{ username or '' }}"
+      />
+    </div>
 
-<h1>Create Account</h1>
+    <div class="form-field">
+      <label for="email">Email</label>
 
-<form method="post" action="/register">
-
-    <label for="email">Email</label>
-
-    <input
+      <input
         type="email"
         id="email"
         name="email"
         required
         autocomplete="email"
-    >
+        placeholder="you@example.com"
+        value="{{ email or '' }}"
+      />
+    </div>
+    <div class="form-field">
+      <label for="password">Password</label>
 
-    <label for="password">Password</label>
-
-    <input
+      <input
         type="password"
         id="password"
         name="password"
         required
         autocomplete="new-password"
-    >
+        placeholder="Create a password"
+      />
+    </div>
+    <button type="submit" class="auth-button">Create account</button>
+  </form>
 
-    <button type="submit">
-        Create Account
-    </button>
-
-</form>
-
-<p>
+  <p class="auth-footer">
     Already have an account?
     <a href="/login">Log in</a>
-</p>
+  </p>
+</div>
 
 {% endblock %}

@@ -6,39 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-    <link rel="stylesheet" href="/static/newstyle.css?v=2.1" />
+    <link rel="stylesheet" href="/static/newstyle.css?v=2.4" />
   </head>
 
   <body>
+    {% if success %}
+    <div class="toast toast-success" id="toast">{{ success }}</div>
+    {% elif error %}
+    <div class="toast toast-error" id="toast">{{ error }}</div>
+    {% endif %}
+
     <div class="container">{% block content %}{% endblock %}</div>
 
     <nav class="bottom-nav">
-    <a
+      <a
         href="/"
         class="nav-item {% if request.url.path == '/' %}active{% endif %}"
-    >
-        <img src="/static/icons/home.svg" alt="Home">
+      >
+        <img src="/static/icons/home.svg" alt="Home" />
         <span>Home</span>
-    </a>
+      </a>
 
-    <a
+      <a
         href="/search"
         class="nav-item {% if request.url.path == '/search' %}active{% endif %}"
-    >
-        <img src="/static/icons/search.svg" alt="Search">
+      >
+        <img src="/static/icons/search.svg" alt="Search" />
         <span>Search</span>
-    </a>
+      </a>
 
-    <a
+      <a
         href="/watchlist"
         class="nav-item {% if request.url.path == '/watchlist' %}active{% endif %}"
-    >
-        <img src="/static/icons/bookmark-black.svg" alt="Saved">
-        <span>Saved</span>
-    </a>
-
-</nav>
+      >
+        <img src="/static/icons/bookmark-black.svg" alt="Watchlist" />
+        <span>Watchlist</span>
+      </a>
+    </nav>
 
     <script src="/static/app.js"></script>
+    <script>
+      const toast = document.getElementById("toast");
+
+      if (toast) {
+        setTimeout(() => {
+          toast.classList.add("toast-hide");
+
+          setTimeout(() => {
+            toast.remove();
+          }, 300);
+        }, 3000);
+      }
+    </script>
   </body>
 </html>
