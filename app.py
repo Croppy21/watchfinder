@@ -198,3 +198,16 @@ def profile(request: Request):
             "request": request
         }
     )
+#-------------------------
+# REGISTER PAGE
+#------------------------
+@app.get("/register", response_class=HTMLResponse)
+def register(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="register.html",
+        context={
+            "request": request
+        }
+    )
