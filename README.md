@@ -5,7 +5,7 @@ WatchFinder helps users find where movies and TV shows are available to stream.
 Built with Flask and the TMDB API, the app allows users to search for titles and view their available streaming providers in one place.
 
 ## Live Demo
-https://watchfinder-a0lz.onrender.com/
+https://watchfinder-app.onrender.com/
 ## Why I built this
 
 I created WatchFinder to improve my skills in:
