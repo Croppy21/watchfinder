@@ -1,7 +1,12 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+from sqlalchemy.orm import Session
+from database.database import get_db
+from database.models import User
+from utils.auth import hash_password
 
 from services.tmdb import (
     search_multi,
@@ -209,5 +214,47 @@ def register(request: Request):
         name="register.html",
         context={
             "request": request
+        }
+    )
+
+@app.post("/register", response_class=HTMLResponse)
+def register_user(
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    existing_user = (
+        db.query(User)
+        .filter(User.email == email)
+        .first()
+    )
+
+    if existing_user:
+        return templates.TemplateResponse(
+            request=request,
+            name="register.html",
+            context={
+                "request": request,
+                "error": "An account with that email already exists."
+            }
+        )
+
+    hashed_password = hash_password(password)
+
+    user = User(
+        email=email,
+        password_hash=hashed_password
+    )
+
+    db.add(user)
+    db.commit()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="register.html",
+        context={
+            "request": request,
+            "success": "Account created successfully!"
         }
     )
