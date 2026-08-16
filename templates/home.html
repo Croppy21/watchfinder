@@ -1,59 +1,30 @@
-{% extends "base.html" %}
-{% block content %}
-{% include "partials/top_nav.html" %}
+{% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
+%}
 <section class="home-header">
-    <h1>🎬 WatchFinder</h1>
+  <h1>🎬 WatchFinder</h1>
 
-    <p class="subtitle">
-        Find where to stream movies and TV shows.
-    </p>
+  <p class="subtitle">Find where to stream movies and TV shows.</p>
 
-
-    <a href="/search" class="home-action">
-        Start Searching
-    </a>
-
+  <a href="/search" class="home-action"> Start Searching </a>
 </section>
-
-
 
 <section class="info-section">
+  <h2>How it works</h2>
 
-    <h2>How it works</h2>
-
-    <p>
-        Search for any movie or TV show and discover
-        which streaming services are available.
-    </p>
-
+  <p>
+    Search for any movie or TV show and discover which streaming services are
+    available.
+  </p>
 </section>
-
-
 
 <section class="info-section">
-
-    <h2>Features</h2>
-
-    <p>
-        ✓ Find streaming providers
-    </p>
-    <p>
-        ✓ Browse movies and TV shows
-    </p>
-
+  <h2>Features</h2>
+  <ul class="feature-list">
+    <li class="feature-item">Search for movies and TV shows</li>
+    <li class="feature-item">Find streaming providers</li>
+    <li class="feature-item">Add items to your watchlist</li>
+    <li class="feature-item">Manage your profile and account</li>
+  </ul>
 </section>
-
-
-
-<section class="info-section">
-
-    <h2>Account</h2>
-
-    <p>
-        Login and personal watchlists/favourites are coming soon.
-    </p>
-
-</section>
-
 
 {% endblock %}

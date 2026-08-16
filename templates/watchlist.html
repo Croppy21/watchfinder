@@ -1,12 +1,307 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 {% include "partials/top_nav.html" %}
-<h1>Work in Progress</h1>
-<p class="subtitle">
-    This page is under construction. Please check back later.
-</p>
-<p>
-    In the meantime, you can use the search feature to find movies and TV shows.
-</p>
-{% endblock %} 
+
+<div class="watchlist-page">
+
+    <div class="watchlist-header">
+        <h1>My Watchlist</h1>
+        <p>Keep track of what you're watching and what you want to watch.</p>
+    </div>
+
+
+    <!-- CURRENTLY WATCHING -->
+    <section class="watchlist-section">
+
+        <h2>Currently Watching</h2>
+
+        {% set watching = watchlist | selectattr("status", "equalto", "watching") | list %}
+
+        {% if watching %}
+
+            <div class="watchlist-grid">
+
+                {% for item in watching %}
+
+                <div class="watchlist-card">
+
+                    <a href="/{{ item.media_type }}/{{ item.tmdb_id }}">
+                        <img
+                            src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}"
+                            alt="{{ item.title }}"
+                        >
+                    </a>
+
+                    <div class="watchlist-info">
+
+                        <h3>{{ item.title }}</h3>
+
+                        <span class="watchlist-type">
+                            {{ item.media_type | upper }}
+                        </span>
+
+                        <div class="watchlist-actions">
+
+                            <form method="post" action="/watchlist/status">
+
+                                <input
+                                    type="hidden"
+                                    name="item_id"
+                                    value="{{ item.id }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="finished"
+                                >
+
+                                <button type="submit">
+                                    ✓ Finished
+                                </button>
+
+                            </form>
+
+
+                            <form method="post" action="/watchlist/remove">
+
+                                <input
+                                    type="hidden"
+                                    name="tmdb_id"
+                                    value="{{ item.tmdb_id }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="media_type"
+                                    value="{{ item.media_type }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="remove-button"
+                                >
+                                    Remove
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="watchlist-empty">
+                You're not currently watching anything.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- WANT TO WATCH -->
+    <section class="watchlist-section">
+
+        <h2>Want to Watch</h2>
+
+        {% set wanted = watchlist | selectattr("status", "equalto", "want_to_watch") | list %}
+
+        {% if wanted %}
+
+            <div class="watchlist-grid">
+
+                {% for item in wanted %}
+
+                <div class="watchlist-card">
+
+                    <a href="/{{ item.media_type }}/{{ item.tmdb_id }}">
+                        <img
+                            src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}"
+                            alt="{{ item.title }}"
+                        >
+                    </a>
+
+                    <div class="watchlist-info">
+
+                        <h3>{{ item.title }}</h3>
+
+                        <span class="watchlist-type">
+                            {{ item.media_type | upper }}
+                        </span>
+
+                        <div class="watchlist-actions">
+
+                            <form method="post" action="/watchlist/status">
+
+                                <input
+                                    type="hidden"
+                                    name="item_id"
+                                    value="{{ item.id }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="watching"
+                                >
+
+                                <button type="submit">
+                                    ▶ Watching
+                                </button>
+
+                            </form>
+
+
+                            <form method="post" action="/watchlist/remove">
+
+                                <input
+                                    type="hidden"
+                                    name="tmdb_id"
+                                    value="{{ item.tmdb_id }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="media_type"
+                                    value="{{ item.media_type }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="remove-button"
+                                >
+                                    Remove
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="watchlist-empty">
+                Nothing here yet.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- FINISHED -->
+    <section class="watchlist-section">
+
+        <h2>Finished</h2>
+
+        {% set finished = watchlist | selectattr("status", "equalto", "finished") | list %}
+
+        {% if finished %}
+
+            <div class="watchlist-grid">
+
+                {% for item in finished %}
+
+                <div class="watchlist-card">
+
+                    <a href="/{{ item.media_type }}/{{ item.tmdb_id }}">
+                        <img
+                            src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}"
+                            alt="{{ item.title }}"
+                        >
+                    </a>
+
+                    <div class="watchlist-info">
+
+                        <h3>{{ item.title }}</h3>
+
+                        <span class="watchlist-type">
+                            {{ item.media_type | upper }}
+                        </span>
+
+                        <div class="watchlist-actions">
+
+                            <form method="post" action="/watchlist/status">
+
+                                <input
+                                    type="hidden"
+                                    name="item_id"
+                                    value="{{ item.id }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="status"
+                                    value="watching"
+                                >
+
+                                <button type="submit">
+                                    ▶ Watch Again
+                                </button>
+
+                            </form>
+
+
+                            <form method="post" action="/watchlist/remove">
+
+                                <input
+                                    type="hidden"
+                                    name="tmdb_id"
+                                    value="{{ item.tmdb_id }}"
+                                >
+
+                                <input
+                                    type="hidden"
+                                    name="media_type"
+                                    value="{{ item.media_type }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="remove-button"
+                                >
+                                    Remove
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="watchlist-empty">
+                You haven't finished anything yet.
+            </p>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

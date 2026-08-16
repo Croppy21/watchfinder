@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
 from database.database import get_db
-from database.models import User
+from database.models import User, WatchlistItem
 from utils.auth import hash_password, verify_password
 
 from services.tmdb import (
@@ -35,6 +35,17 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
+
+# -------------------------
+# Flash Messages (notifications)
+# -------------------------
+
+def set_flash(request: Request, message: str, category: str = "success"):
+    request.session["flash"] = {
+        "message": message,
+        "category": category
+    }
 
 # -------------------------
 # AUTHENTICATION
@@ -65,16 +76,11 @@ def get_current_user(
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
 
-    success = request.session.pop("success", None)
-    error = request.session.pop("error", None)
-
     return templates.TemplateResponse(
         request=request,
         name="home.html",
         context={
-            "request": request,
-            "success": success,
-            "error": error
+            "request": request
         }
     )
 
@@ -138,10 +144,28 @@ def search(request: Request, query: str):
 # -------------------------
 
 @app.get("/movie/{movie_id}", response_class=HTMLResponse)
-def movie(request: Request, movie_id: int):
+def movie(
+    request: Request,
+    movie_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
 
     movie = get_movie(movie_id)
     providers = get_watch_providers(movie_id)
+
+    watchlist_item = None
+
+    if user:
+        watchlist_item = (
+            db.query(WatchlistItem)
+            .filter(
+                WatchlistItem.user_id == user.id,
+                WatchlistItem.tmdb_id == movie_id,
+                WatchlistItem.media_type == "movie"
+            )
+            .first()
+        )
 
     return templates.TemplateResponse(
         request=request,
@@ -151,7 +175,9 @@ def movie(request: Request, movie_id: int):
             "movie": movie,
             "poster": poster_url(movie.get("poster_path")),
             "backdrop": movie.get("backdrop_path"),
-            "providers_html": build_providers_html(providers)
+            "providers_html": build_providers_html(providers),
+            "user": user,
+            "watchlist_item": watchlist_item
         }
     )
 
@@ -161,10 +187,28 @@ def movie(request: Request, movie_id: int):
 # -------------------------
 
 @app.get("/tv/{tv_id}", response_class=HTMLResponse)
-def tv(request: Request, tv_id: int):
+def tv(
+    request: Request,
+    tv_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
 
     tv = get_tv_show(tv_id)
     providers = get_tv_watch_providers(tv_id)
+
+    watchlist_item = None
+
+    if user:
+        watchlist_item = (
+            db.query(WatchlistItem)
+            .filter(
+                WatchlistItem.user_id == user.id,
+                WatchlistItem.tmdb_id == tv_id,
+                WatchlistItem.media_type == "tv"
+            )
+            .first()
+        )
 
     return templates.TemplateResponse(
         request=request,
@@ -174,10 +218,11 @@ def tv(request: Request, tv_id: int):
             "tv": tv,
             "poster": poster_url(tv.get("poster_path")),
             "backdrop": tv.get("backdrop_path"),
-            "providers_html": build_providers_html(providers)
+            "providers_html": build_providers_html(providers),
+            "user": user,
+            "watchlist_item": watchlist_item
         }
     )
-
 
 # -------------------------
 # AUTOCOMPLETE (HTMX)
@@ -213,24 +258,162 @@ def autocomplete(request: Request, query: str):
 @app.get("/watchlist", response_class=HTMLResponse)
 def watchlist(
     request: Request,
+    db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
 
     if not user:
         return RedirectResponse(
-            url="/login",
+            url="/login?next=/watchlist",
             status_code=303
         )
+
+    watchlist_items = (
+        db.query(WatchlistItem)
+        .filter(WatchlistItem.user_id == user.id)
+        .order_by(WatchlistItem.created_at.desc())
+        .all()
+    )
 
     return templates.TemplateResponse(
         request=request,
         name="watchlist.html",
         context={
             "request": request,
-            "user": user
+            "user": user,
+            "watchlist": watchlist_items
         }
     )
     
+
+@app.post("/watchlist/add")
+def add_to_watchlist(
+    request: Request,
+    tmdb_id: int = Form(...),
+    media_type: str = Form(...),
+    title: str = Form(...),
+    poster_path: str = Form(None),
+    return_url: str = Form("/"),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+
+    if not user:
+        return RedirectResponse(
+            url="/login?next=" + request.headers.get("referer", "/"),
+            status_code=303
+        )
+
+    existing = (
+        db.query(WatchlistItem)
+        .filter(
+            WatchlistItem.user_id == user.id,
+            WatchlistItem.tmdb_id == tmdb_id,
+            WatchlistItem.media_type == media_type
+        )
+        .first()
+    )
+
+    if existing:
+        return RedirectResponse(
+            url=return_url,
+            status_code=303
+        )
+
+    item = WatchlistItem(
+        user_id=user.id,
+        tmdb_id=tmdb_id,
+        media_type=media_type,
+        title=title,
+        poster_path=poster_path,
+        status="want_to_watch"
+    )
+
+    db.add(item)
+    db.commit()
+
+    return RedirectResponse(
+        url=return_url,
+        status_code=303
+    )
+    
+@app.post("/watchlist/remove")
+def remove_from_watchlist(
+    request: Request,
+    tmdb_id: int = Form(...),
+    media_type: str = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/watchlist",
+            status_code=303
+        )
+
+    item = (
+        db.query(WatchlistItem)
+        .filter(
+            WatchlistItem.user_id == user.id,
+            WatchlistItem.tmdb_id == tmdb_id,
+            WatchlistItem.media_type == media_type
+        )
+        .first()
+    )
+
+    if item:
+        db.delete(item)
+        db.commit()
+
+    return RedirectResponse(
+        url=request.headers.get("referer", "/watchlist"),
+        status_code=303
+    )
+@app.post("/watchlist/status")
+def change_watchlist_status(
+    request: Request,
+    item_id: int = Form(...),
+    status: str = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/watchlist",
+            status_code=303
+        )
+
+    allowed_statuses = {
+        "want_to_watch",
+        "watching",
+        "finished"
+    }
+
+    if status not in allowed_statuses:
+        return RedirectResponse(
+            url="/watchlist",
+            status_code=303
+        )
+
+    item = (
+        db.query(WatchlistItem)
+        .filter(
+            WatchlistItem.id == item_id,
+            WatchlistItem.user_id == user.id
+        )
+        .first()
+    )
+
+    if item:
+        item.status = status
+        db.commit()
+
+    return RedirectResponse(
+        url="/watchlist",
+        status_code=303
+    )
 # -------------------------
 # PROFILE PAGE
 # -------------------------
@@ -242,7 +425,7 @@ def profile(
 
     if not user:
         return RedirectResponse(
-            url="/login",
+            url="/login?next=/profile",
             status_code=303
         )
 
@@ -265,13 +448,17 @@ def login(request: Request):
     success = request.session.pop("success", None)
     error = request.session.pop("error", None)
 
+    registered = request.query_params.get("registered")
+    next_url = request.query_params.get("next")
     return templates.TemplateResponse(
         request=request,
         name="login.html",
         context={
             "request": request,
             "success": success,
-            "error": error
+            "error": error,
+            "registered": registered,
+            "next_url": next_url
         }
     )
 @app.post("/login", response_class=HTMLResponse)
@@ -279,6 +466,7 @@ def login_user(
     request: Request,
     login: str = Form(...),
     password: str = Form(...),
+    next_url: str = Form(""),
     db: Session = Depends(get_db)
 ):
 
@@ -306,6 +494,12 @@ def login_user(
 
     request.session["user_id"] = user.id
 
+    if next_url:
+        return RedirectResponse(
+            url=next_url,
+            status_code=303
+        )
+    
     return RedirectResponse(
         url="/profile",
         status_code=303
@@ -319,7 +513,11 @@ def logout(request: Request):
 
     request.session.clear()
 
-    request.session["success"] = "You've been logged out."
+    set_flash(
+        request,
+        "You've been logged out.",
+        "success"
+    )
 
     return RedirectResponse(
         url="/",
@@ -389,11 +587,18 @@ def register_user(
 
     db.add(user)
     db.commit()
+    db.refresh(user)
 
-    request.session["success"] = "Account created successfully. You can now log in."
+    request.session["user_id"] = user.id
+
+    set_flash(
+        request,
+        f"Welcome to WatchFinder, {user.username}!",
+        "success"
+    )
 
     return RedirectResponse(
-        url="/login",
+        url="/profile",
         status_code=303
     )
     
@@ -409,7 +614,7 @@ def settings(
 
     if not user:
         return RedirectResponse(
-            url="/login",
+            url="/login?next=/settings",
             status_code=303
         )
 

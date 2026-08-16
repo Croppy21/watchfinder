@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-    <link rel="stylesheet" href="/static/newstyle.css?v=2.4" />
+    <link rel="stylesheet" href="/static/newstyle.css?v=2.5" />
   </head>
 
   <body>
-    {% if success %}
-    <div class="toast toast-success" id="toast">{{ success }}</div>
-    {% elif error %}
-    <div class="toast toast-error" id="toast">{{ error }}</div>
+    {% set flash = request.session.pop("flash", None) %} {% if flash %}
+    <div class="toast toast-{{ flash.category }}" id="toast">
+      {{ flash.message }}
+    </div>
     {% endif %}
 
     <div class="container">{% block content %}{% endblock %}</div>

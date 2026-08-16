@@ -1,30 +1,51 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <button id="back-btn" hx-get="/" hx-target="body">← Back</button>
 
-<div class="hero"
-     style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')">
-</div>
+<div
+  class="hero"
+  style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')"
+></div>
 
 <div class="details">
+  <img src="{{ poster }}" />
 
-    <img src="{{ poster }}">
+  <div>
+    <h2>{{ tv.name }}</h2>
 
-    <div>
-        <h2>{{ tv.name }}</h2>
+    <p><b>First Air Date:</b> {{ tv.first_air_date[:4] }}</p>
+    <div class="rating">{{ tv.vote_average }}</div>
 
-        <p><b>First Air Date:</b> {{ tv.first_air_date[:4] }}</p>
-        <div class="rating">{{ tv.vote_average }}</div>
-
-        <p>{{ tv.overview }}</p>
-    </div>
-
+    <p>{{ tv.overview }}</p>
+  </div>
 </div>
 
+{% if user %} {% if watchlist_item %}
+
+<div class="watchlist-status">✓ In Watchlist</div>
+
+{% else %}
+
+<form method="post" action="/watchlist/add" class="watchlist-form">
+  <input type="hidden" name="tmdb_id" value="{{ tv.id }}" />
+
+  <input type="hidden" name="media_type" value="tv" />
+
+  <input type="hidden" name="title" value="{{ tv.name }}" />
+
+  <input type="hidden" name="poster_path" value="{{ tv.poster_path }}" />
+  <input type="hidden" name="return_url" value="/tv/{{ tv.id }}" />
+
+  <button type="submit" class="watchlist-button">＋ Add to Watchlist</button>
+</form>
+
+{% endif %} {% else %}
+
+<a href="/login?next=/tv/{{ tv.id }}" class="watchlist-button">
+  ＋ Add to Watchlist
+</a>
+
+{% endif %}
 <h3>Where to watch (AU)</h3>
 
-{{ providers_html | safe }}
-
-{% endblock %}
+{{ providers_html | safe }} {% endblock %}

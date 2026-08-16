@@ -488,91 +488,60 @@ button b, small {
 
 /* ---------- PROVIDERS ---------- */
 
-ul {
-  padding: 0;
-  margin: 10px 0 20px;
+.providers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0 24px;
 }
 
-li {
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 4px 4px 0 0;
-  border-radius: 999px;
+.provider-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 12px 7px 7px;
+
+  background: #ffffff;
+  border: 1px solid #ded8d0;
+  border-radius: 12px;
+
+  box-shadow: 0 2px 7px rgba(50, 45, 40, 0.06);
+
+  color: #38332f;
+  text-decoration: none;
+
   font-size: 13px;
   font-weight: 600;
-  background: #e8e4df;
-  color: #38332f;
-  border: 1px solid #d7d0c8;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-/* provider colours */
-li[data-provider*="netflix"] {
-  background: #e50914;
-  color: #000;
+.provider-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(50, 45, 40, 0.12);
 }
-li[data-provider*="amazon"] {
-  background: #00a8e1;
-  color: #fff;
+
+.provider-card:active {
+  transform: scale(0.97);
 }
-li[data-provider*="disney"] {
-  background: #113ccf;
-  color: #fff;
+
+.provider-logo {
+  width: 32px;
+  height: 32px;
+
+  object-fit: cover;
+  border-radius: 7px;
+
+  flex-shrink: 0;
 }
-li[data-provider*="apple"] {
-  background: #000;
-  color: #f5f5f5;
-}
-li[data-provider*="hulu"] {
-  background: #1ce783;
-  color: #0b1a0f;
-}
-li[data-provider*="justwatch tv"] {
-  background: #f5c518;
-  color: #000;
-}
-li[data-provider*="hbo"] {
-  background: #5f2eea;
-  color: #fff;
-}
-li[data-provider*="youtube"] {
-  background: #ff0000;
-  color: #fff;
-}
-li[data-provider*="foxtel"] {
-  background: #ff6600;
-  color: #fff;
-}
-li[data-provider*="google play"] {
-  background: #34a853;
-  color: #fff;
-}
-li[data-provider*="stan"] {
-  background: #0077ff;
-  color: #fff;
-}
-li[data-provider*="binge"] {
-  background: #00e676;
-  color: #0b1a0f;
-}
-li[data-provider*="paramount"] {
-  background: #0064ff;
-  color: #fff;
-}
-li[data-provider*="britbox"] {
-  background: #00a3e0;
-  color: #fff;
-}
-li[data-provider*="mubi"] {
-  background: #1a1a1a;
-  color: #f5c542;
-}
-li[data-provider*="sbs"] {
-  background: #d8db00;
-  color: #080808;
-}
-li[data-provider*="fetch"] {
-  background: #00a3e0;
-  color: #fff;
+
+.provider-card span {
+  white-space: nowrap;
 }
 
 /* ---------- HERO ---------- */
@@ -625,10 +594,173 @@ li[data-provider*="fetch"] {
   background: rgba(0, 0, 0, 0.65);
 }
 
+/* ---------- WATCHLIST BUTTON ---------- */
 
-/* =========================================
+.watchlist-form {
+    margin: 20px 16px;
+}
+
+.watchlist-button {
+    display: block;
+    width: 100%;
+
+    padding: 14px 20px;
+
+    background: #252525;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 12px;
+
+    text-align: center;
+    text-decoration: none;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.watchlist-button:hover {
+    background: #3a3a3a;
+}
+
+.watchlist-status {
+    margin: 20px 16px;
+    padding: 14px 20px;
+
+    background: #e8e4df;
+    color: #38332f;
+
+    border-radius: 12px;
+
+    text-align: center;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* ---------- WATCHLIST Page ---------- */
+
+.watchlist-page {
+  width: 100%;
+}
+
+.watchlist-header {
+  text-align: center;
+  padding: 25px 10px 20px;
+}
+
+.watchlist-header h1 {
+  margin-bottom: 8px;
+}
+
+.watchlist-header p {
+  color: #77716b;
+}
+
+.watchlist-section {
+  margin-top: 25px;
+}
+
+.watchlist-section h2 {
+  padding: 0 4px;
+  margin-bottom: 14px;
+  font-size: 20px;
+}
+
+.watchlist-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.watchlist-card {
+  display: flex;
+  gap: 14px;
+  padding: 12px;
+
+  background: #ffffff;
+  border: 1px solid #ded8d0;
+  border-radius: 14px;
+
+  box-shadow: 0 3px 10px rgba(50, 45, 40, 0.07);
+}
+
+.watchlist-card img {
+  width: 70px;
+  height: 105px;
+
+  object-fit: cover;
+  border-radius: 9px;
+
+  flex-shrink: 0;
+}
+
+.watchlist-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.watchlist-info h3 {
+  padding: 0;
+  margin: 2px 0 3px;
+
+  font-size: 16px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.watchlist-type {
+  color: #88817a;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.watchlist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.watchlist-actions form {
+  margin: 0;
+}
+
+.watchlist-actions button {
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.remove-button {
+  background: #eeeae5;
+  color: #55504a;
+}
+
+.remove-button:hover {
+  background: #e2ddd7;
+}
+
+.watchlist-empty {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px dashed #d8d2ca;
+  border-radius: 12px;
+  color: #88817a;
+  text-align: center;
+}
+
+/* ----------
    AUTH / PROFILE
-========================================= */
+---------- */
 
 .auth-page,
 .profile-page {
@@ -962,9 +1094,35 @@ li[data-provider*="fetch"] {
     color: #b42318;
 }
 
-/* =========================================
-DESKTOP
-========================================= */
+/* ----------  Home FEATURES ---------- */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-item {
+    display: block;
+    width: 100%;
+    padding: 6px 0;
+    margin: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+    color: #38332f;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.feature-item::before {
+    content: "✓";
+    margin-right: 8px;
+    font-weight: 700;
+}
+
+
+
+/* ----------DESKTOP---------- */
 
 @media (min-width: 768px) {
   .container {
