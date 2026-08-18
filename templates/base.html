@@ -6,13 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-    <link rel="stylesheet" href="/static/newstyle.css?v=2.5" />
+    <link rel="stylesheet" href="/static/newstyle.css?v=2.8" />
   </head>
 
   <body>
     {% set flash = request.session.pop("flash", None) %} {% if flash %}
     <div class="toast toast-{{ flash.category }}" id="toast">
-      {{ flash.message }}
+      {% if flash.category == "success" %}
+      <img src="/static/icons/checkmark-green.svg" alt="" />
+      {% elif flash.category == "error" %}
+      <span class="toast-error-icon">!</span>
+      {% endif %}
+
+      <span>{{ flash.message }}</span>
     </div>
     {% endif %}
 
@@ -44,7 +50,7 @@
       </a>
     </nav>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=2.0"></script>
     <script>
       const toast = document.getElementById("toast");
 

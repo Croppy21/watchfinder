@@ -315,6 +315,11 @@ def add_to_watchlist(
     )
 
     if existing:
+        set_flash(
+            request,
+            "Already in your watchlist.",
+            "success"
+            )
         return RedirectResponse(
             url=return_url,
             status_code=303
@@ -332,6 +337,11 @@ def add_to_watchlist(
     db.add(item)
     db.commit()
 
+    set_flash(
+    request,
+    "Added to your watchlist.",
+    "success"
+)
     return RedirectResponse(
         url=return_url,
         status_code=303
@@ -366,6 +376,11 @@ def remove_from_watchlist(
         db.delete(item)
         db.commit()
 
+        set_flash(
+            request,
+            "Removed from your watchlist.",
+            "success"
+            )
     return RedirectResponse(
         url=request.headers.get("referer", "/watchlist"),
         status_code=303
@@ -493,7 +508,14 @@ def login_user(
         )
 
     request.session["user_id"] = user.id
+    request.session["username"] = user.username
 
+    set_flash(
+            request,
+            f"Welcome to WatchFinder, {user.username}!",
+            "success"
+        )
+    
     if next_url:
         return RedirectResponse(
             url=next_url,
@@ -590,6 +612,7 @@ def register_user(
     db.refresh(user)
 
     request.session["user_id"] = user.id
+    request.session["username"] = user.username
 
     set_flash(
         request,
