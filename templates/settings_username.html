@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "partials/top_nav.html" %}
+
+<div class="auth-page">
+
+    <div class="auth-header">
+        <h1>Change username</h1>
+        <p>Choose a new username for your WatchFinder account.</p>
+    </div>
+
+    {% if error %}
+    <div class="auth-message error">{{ error }}</div>
+    {% endif %}
+
+    {% if success %}
+    <div class="auth-message success">{{ success }}</div>
+    {% endif %}
+
+    <form method="post" action="/settings/username" class="auth-form">
+
+        <div class="form-field">
+            <label for="username">New username</label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                required
+                maxlength="50"
+                autocomplete="username"
+                value="{{ user.username }}"
+            >
+        </div>
+
+        <button type="submit" class="auth-button">
+            Save username
+        </button>
+
+    </form>
+
+    <p class="auth-footer">
+        <a href="/settings">Back to settings</a>
+    </p>
+
+</div>
+
+{% endblock %}

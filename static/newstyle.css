@@ -59,6 +59,12 @@ h3 {
   color: #1a1a1a;
 }
 
+.form-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: #88817a;
+}
 /* ---------- navigation ---------- */
 
 .bottom-nav {

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 import os
 
 from fastapi import FastAPI, Request, Form, Depends
@@ -48,6 +49,30 @@ def set_flash(request: Request, message: str, category: str = "success"):
     }
 
 # -------------------------
+# Password validation
+# -------------------------
+
+import re
+
+def validate_password(password: str) -> str | None:
+    if len(password) < 8:
+        return "Password must be at least 8 characters long."
+
+    if not re.search(r"[A-Z]", password):
+        return "Password must contain at least one uppercase letter."
+
+    if not re.search(r"[a-z]", password):
+        return "Password must contain at least one lowercase letter."
+
+    if not re.search(r"\d", password):
+        return "Password must contain at least one number."
+
+    if not re.search(r"[^\w\s]", password):
+        return "Password must contain at least one special character."
+
+    return None
+
+# -------------------------
 # AUTHENTICATION
 # -------------------------
 
@@ -66,6 +91,13 @@ def get_current_user(
         request.session.clear()
         return None
 
+    now = datetime.now(timezone.utc)
+    if (
+        user.last_active is None
+        or now - user.last_active > timedelta(hours=1)
+    ):
+        user.last_active = now
+        db.commit()
     return user
 
 
@@ -571,6 +603,20 @@ def register_user(
 
     username = username.strip()
     email = email.strip().lower()
+    
+    password_error = validate_password(password)
+    
+    if password_error:
+        return templates.TemplateResponse(
+            request=request,
+            name="register.html",
+            context={
+                "request": request,
+                "error": password_error,
+                "username": username,
+                "email": email
+            }
+        )
 
     existing_user = (
         db.query(User)
@@ -648,4 +694,231 @@ def settings(
             "request": request,
             "user": user
         }
+    )
+    
+# -------------------------
+# CHANGE USERNAME
+# -------------------------
+
+@app.get("/settings/username", response_class=HTMLResponse)
+def change_username_page(
+    request: Request,
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/username",
+            status_code=303
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="settings_username.html",
+        context={
+            "request": request,
+            "user": user
+        }
+    )
+
+
+@app.post("/settings/username", response_class=HTMLResponse)
+def change_username(
+    request: Request,
+    username: str = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/username",
+            status_code=303
+        )
+
+    username = username.strip()
+
+    existing_user = (
+        db.query(User)
+        .filter(
+            User.username == username,
+            User.id != user.id
+        )
+        .first()
+    )
+
+    if existing_user:
+        return templates.TemplateResponse(
+            request=request,
+            name="settings_username.html",
+            context={
+                "request": request,
+                "user": user,
+                "error": "That username is already taken."
+            }
+        )
+
+    user.username = username
+    request.session["username"] = username
+
+    db.commit()
+
+    set_flash(
+        request,
+        "Username updated successfully.",
+        "success"
+)
+    return RedirectResponse(
+        url="/settings",
+        status_code=303
+    )
+    
+# -------------------------
+# CHANGE EMAIL
+# -------------------------
+
+@app.get("/settings/email", response_class=HTMLResponse)
+def change_email_page(
+    request: Request,
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/email",
+            status_code=303
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="settings_email.html",
+        context={
+            "request": request,
+            "user": user
+        }
+    )
+
+
+@app.post("/settings/email", response_class=HTMLResponse)
+def change_email(
+    request: Request,
+    email: str = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/email",
+            status_code=303
+        )
+
+    email = email.strip().lower()
+
+    existing_user = (
+        db.query(User)
+        .filter(
+            User.email == email,
+            User.id != user.id
+        )
+        .first()
+    )
+
+    if existing_user:
+        return templates.TemplateResponse(
+            request=request,
+            name="settings_email.html",
+            context={
+                "request": request,
+                "user": user,
+                "error": "That email address is already registered."
+            }
+        )
+
+    user.email = email
+
+    db.commit()
+
+    set_flash(
+        request,
+        "Email updated successfully.",
+        "success"
+)
+    
+    return RedirectResponse(
+        url="/settings",
+        status_code=303
+    )
+
+# -------------------------
+# CHANGE PASSWORD
+# -------------------------
+
+@app.get("/settings/password", response_class=HTMLResponse)
+def change_password_page(
+    request: Request,
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/password",
+            status_code=303
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="settings_password.html",
+        context={
+            "request": request,
+            "user": user
+        }
+    )
+
+
+@app.post("/settings/password", response_class=HTMLResponse)
+def change_password(
+    request: Request,
+    current_password: str = Form(...),
+    new_password: str = Form(...),
+    confirm_password: str = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/password",
+            status_code=303
+        )
+
+    if not verify_password(current_password, user.password_hash):
+        return templates.TemplateResponse(
+            request=request,
+            name="settings_password.html",
+            context={
+                "request": request,
+                "user": user,
+                "error": "Your current password is incorrect."
+            }
+        )
+
+    if new_password != confirm_password:
+        return templates.TemplateResponse(
+            request=request,
+            name="settings_password.html",
+            context={
+                "request": request,
+                "user": user,
+                "error": "The new passwords do not match."
+            }
+        )
+
+    user.password_hash = hash_password(new_password)
+
+    db.commit()
+
+    set_flash(
+        request,
+        "Password updated successfully.",
+        "success"
+    )
+
+    return RedirectResponse(
+        url="/settings",
+        status_code=303
     )

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey, UniqueConstraint, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -34,10 +34,14 @@ class User(Base):
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
-        nullable=False
-    )
+    DateTime(timezone=True),
+    default=lambda: datetime.now(timezone.utc),
+    nullable=False
+)
+    last_active: Mapped[datetime] = mapped_column(
+    DateTime(timezone=True),
+    nullable=True
+)
     
 class WatchlistItem(Base):
     __tablename__ = "watchlist"
