@@ -1,21 +1,18 @@
 <header class="top-nav">
 
   <a href="/" class="brand">
-    🎬 WatchFinder
+    <img src="/static/icons/Logo.svg" alt="Watch Finder" />
+    <span>WatchFinder</span>
   </a>
 
-  <div class="top-nav-right">
-
+  <a href="/profile" class="profile-button">
     {% if request.session.get("user_id") %}
-      <span class="nav-username">
-        {{ request.session.get("username") }}
+      <span class="nav-avatar">
+        {{ request.session.get("username")[0]|upper }}
       </span>
-    {% endif %}
-
-    <a href="/profile" class="profile-button">
+    {% else %}
       <img src="/static/icons/profile.svg" alt="Profile" />
-    </a>
-
-  </div>
+    {% endif %}
+  </a>
 
 </header>

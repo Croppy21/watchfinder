@@ -922,3 +922,14 @@ def change_password(
         url="/settings",
         status_code=303
     )
+    
+
+@app.get("/install", response_class=HTMLResponse)
+def install_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="install.html",
+        context={
+            "request": request
+        }
+    )

@@ -9,7 +9,28 @@ Users can search for movies and TV shows, view streaming providers, create an ac
 ### Visit WatchFinder: 
 https://watchfinder-1.onrender.com/
 
-### Add WatchFinder to your phone
+## Features
+
+<p>
+  <img src="docs/screenshots/Home.png" width="220">
+  <img src="docs/screenshots/Search.png" width="220">
+  <img src="docs/screenshots/Details.png" width="220">
+  <img src="docs/screenshots/WatchList.png" width="220">
+</p>
+
+- Search for movies and TV shows
+- Autocomplete search suggestions
+- View movie and TV show details
+- View available streaming providers
+- Create an account and log in
+- Personal watchlist
+- Organise watchlist items into:
+  - Currently Watching
+  - Want to Watch
+  - Finished
+- Responsive mobile-first design
+
+## Add WatchFinder to your Apple phone
 
 WatchFinder is designed with a mobile-first interface and can be added to your phone's home screen for quick access.
 
@@ -18,8 +39,11 @@ WatchFinder is designed with a mobile-first interface and can be added to your p
 2. Open your browser's options/share menu.
 3. Select **Add to Home Screen** or the equivalent option.
 4. WatchFinder will then be available from your phone's home screen.
-
-On some browsers, the option may be located under **Bookmarks**, **Share**, or **Add to Home Screen**, depending on the device and browser.
+<p>
+  <img src="docs/screenshots/Homepage.png" width="220">
+  <img src="docs/screenshots/Add-To-Home.png" width="230">
+  <img src="docs/screenshots/WebApp-Add.png" width="220">
+</p>
 
 ## Why I Built This
 
@@ -32,23 +56,6 @@ I created WatchFinder as a personal software project to develop my skills in:
 - Responsive and mobile-first web design
 - Git and GitHub
 - Deploying and hosting a web application
-
-## Features
-
-- Search for movies and TV shows
-- Autocomplete search suggestions
-- View movie and TV show details
-- View available streaming providers
-- Create an account and log in
-- Personal watchlist
-- Organise watchlist items into:
-  - Want to Watch
-  - Currently Watching
-  - Finished
-- Move titles between watchlist statuses
-- Remove titles from your watchlist
-- Responsive mobile-first design
-- Works on desktop and mobile devices
 
 ## Tech Stack
 

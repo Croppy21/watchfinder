@@ -1,11 +1,24 @@
 {% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
 %}
 <section class="home-header">
-  <h1>🎬 WatchFinder</h1>
+  <img src="/static/icons/Logo.svg" alt="Watch Finder" class="hero-logo" />
 
-  <p class="subtitle">Find where to stream movies and TV shows.</p>
+  <h1>Find what to watch.</h1>
+
+  <p class="subtitle">
+    Search movies and TV shows and discover where you can stream, rent or buy
+    them.
+  </p>
 
   <a href="/search" class="home-action"> Start Searching </a>
+</section>
+
+<section class="install-section" id="install-section">
+  <h2>Use WatchFinder like an app</h2>
+
+  <p>Add WatchFinder to your home screen for quick access.</p>
+
+  <a href="/install" class="install-link">How to add it →</a>
 </section>
 
 <section class="info-section">
@@ -27,4 +40,21 @@
   </ul>
 </section>
 
+
+<script>
+  function isInstalledApp() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+    );
+  }
+
+  if (isInstalledApp()) {
+    const installSection = document.getElementById("install-section");
+
+    if (installSection) {
+      installSection.style.display = "none";
+    }
+  }
+</script>
 {% endblock %}

@@ -1,11 +1,11 @@
-{% extends "base.html" %} {% block content %}
-
-<button id="back-btn" hx-get="/" hx-target="body">← Back</button>
+{% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
+%}
 
 <div
   class="hero"
-  style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')"
-></div>
+  style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')">
+  <button id="back-btn" hx-get="/" hx-target="body">← Back</button>
+</div>
 
 <div class="details">
   <img src="{{ poster }}" />
