@@ -1,16 +1,10 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-{% include "partials/top_nav.html" %}
+{% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
+%}
 
 <div class="install-page">
-
   <div class="install-header">
     <h1>How to add WatchFinder</h1>
-    <p>
-      Add WatchFinder to your home screen and use it like an app.
-    </p>
+    <p>Add WatchFinder to your home screen and use it like an app.</p>
   </div>
 
   <section class="install-card">
@@ -18,9 +12,15 @@
 
     <ol class="install-steps">
       <li>Open WatchFinder in <strong>Safari</strong>.</li>
-      <li>Tap the <strong>Share</strong> button.</li>
-      <li>Select <strong>Add to Home Screen</strong>.</li>
-      <li>Turn on <strong>Open as Web App</strong>.</li>
+      <li>
+        Tap the
+        <span class="install-action">
+          <img src="/static/icons/share-button.svg" alt="" class="install-icon" />
+        </span><strong> Share</strong>
+        button.
+      </li>
+      <li>Scroll down and select <strong>Add to Home Screen</strong>.</li>
+      <li>Turn on <strong>Open as Web App</strong> (if available).</li>
       <li>Tap <strong>Add</strong>.</li>
     </ol>
   </section>
@@ -31,13 +31,15 @@
     <ol class="install-steps">
       <li>Open WatchFinder in <strong>Chrome</strong>.</li>
       <li>Tap the <strong>⋮ menu</strong>.</li>
-      <li>Select <strong>Add to Home screen</strong> or <strong>Install app</strong>.</li>
+      <li>
+        Select <strong>Add to Home screen</strong> or
+        <strong>Install app</strong>.
+      </li>
       <li>Follow the instructions to add WatchFinder.</li>
     </ol>
   </section>
 
   <a href="/" class="install-back">← Back to WatchFinder</a>
-
 </div>
 
 {% endblock %}

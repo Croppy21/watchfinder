@@ -1,32 +1,23 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-{% include "partials/top_nav.html" %}
+{% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
+%}
 
 <div class="watchlist-page">
-
   <div class="watchlist-header">
     <h1>My Watchlist</h1>
     <p>Keep track of what you're watching and what you want to watch.</p>
   </div>
 
-
   <!-- CURRENTLY WATCHING -->
   <section class="watchlist-section">
-
     <h2>Currently Watching</h2>
 
-    {% set watching = watchlist | selectattr("status", "equalto", "watching") | list %}
-
-    {% if watching %}
+    {% set watching = watchlist | selectattr("status", "equalto", "watching") |
+    list %} {% if watching %}
 
     <div class="watchlist-grid">
-
       {% for item in watching %}
 
       <div class="watchlist-card">
-
         <a href="/{{ item.media_type }}/{{ item.tmdb_id }}">
           <img
             src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}"
@@ -35,90 +26,89 @@
         </a>
 
         <div class="watchlist-info">
-
           <h3>{{ item.title }}</h3>
 
-          <span class="watchlist-type">
-            {{ item.media_type | upper }}
-          </span>
-
+          <span class="watchlist-type"> {{ item.media_type | upper }} </span>
 
           <!-- ACTION MENU -->
           <div class="watchlist-menu">
-
             <button
               type="button"
               class="watchlist-menu-button"
               aria-label="More actions for {{ item.title }}"
               aria-expanded="false"
             >
-              <img
-                src="/static/icons/more.svg"
-                alt=""
-                aria-hidden="true"
-              />
+              <img src="/static/icons/more.svg" alt="" aria-hidden="true" />
             </button>
 
             <div class="watchlist-menu-dropdown">
-
               <form method="post" action="/watchlist/status">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <input type="hidden" name="status" value="finished">
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <input type="hidden" name="status" value="finished" />
 
                 <button type="submit" class="menu-finished">
-                  <img src="/static/icons/checkmark-green.svg" alt="" aria-hidden="true">
+                  <img
+                    src="/static/icons/checkmark-green.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span>Mark as finished</span>
                 </button>
               </form>
 
               <form method="post" action="/watchlist/remove">
-                <input type="hidden" name="tmdb_id" value="{{ item.tmdb_id }}">
-                <input type="hidden" name="media_type" value="{{ item.media_type }}">
+                <input
+                  type="hidden"
+                  name="tmdb_id"
+                  value="{{ item.tmdb_id }}"
+                />
+                <input
+                  type="hidden"
+                  name="media_type"
+                  value="{{ item.media_type }}"
+                />
 
                 <button type="submit" class="menu-remove">
-                  <img src="/static/icons/trashcan.svg" alt="" aria-hidden="true">
+                  <img
+                    src="/static/icons/trashcan.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span>Remove from list</span>
                 </button>
               </form>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
 
       {% endfor %}
-
     </div>
 
     {% else %}
 
-    <p class="watchlist-empty">
-      You're not currently watching anything.
-    </p>
+    <div class="watchlist-empty">
+      <strong>Nothing here yet</strong>
+      <p>
+        Start watching a movie or TV show from your watchlist and it will appear
+        here.
+      </p>
+    </div>
 
     {% endif %}
-
   </section>
-
 
   <!-- WANT TO WATCH -->
   <section class="watchlist-section">
-
     <h2>Want to Watch</h2>
 
-    {% set wanted = watchlist | selectattr("status", "equalto", "want_to_watch") | list %}
-
-    {% if wanted %}
+    {% set wanted = watchlist | selectattr("status", "equalto", "want_to_watch")
+    | list %} {% if wanted %}
 
     <div class="watchlist-grid">
-
       {% for item in wanted %}
 
       <div class="watchlist-card">
-
         <a href="/{{ item.media_type }}/{{ item.tmdb_id }}">
           <img
             src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}"
@@ -127,99 +117,106 @@
         </a>
 
         <div class="watchlist-info">
-
           <h3>{{ item.title }}</h3>
 
-          <span class="watchlist-type">
-            {{ item.media_type | upper }}
-          </span>
-
+          <span class="watchlist-type"> {{ item.media_type | upper }} </span>
 
           <!-- ACTION MENU -->
           <div class="watchlist-menu">
-
             <button
               type="button"
               class="watchlist-menu-button"
               aria-label="More actions for {{ item.title }}"
               aria-expanded="false"
             >
-              <img
-                src="/static/icons/more.svg"
-                alt=""
-              />
+              <img src="/static/icons/more.svg" alt="" />
             </button>
 
             <div class="watchlist-menu-dropdown">
-
               <form method="post" action="/watchlist/status">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <input type="hidden" name="status" value="watching">
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <input type="hidden" name="status" value="watching" />
 
                 <button type="submit" class="menu-watching">
-                  <img src="/static/icons/play-button-circle.svg" alt="" aria-hidden="true">
+                  <img
+                    src="/static/icons/play-button-circle.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span>Start Watching</span>
                 </button>
               </form>
 
               <form method="post" action="/watchlist/status">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <input type="hidden" name="status" value="finished">
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <input type="hidden" name="status" value="finished" />
 
                 <button type="submit" class="menu-finished">
-                  <img src="/static/icons/checkmark-green.svg" alt="" aria-hidden="true">
+                  <img
+                    src="/static/icons/checkmark-green.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span>Mark as finished</span>
                 </button>
               </form>
 
               <form method="post" action="/watchlist/remove">
-                <input type="hidden" name="tmdb_id" value="{{ item.tmdb_id }}">
-                <input type="hidden" name="media_type" value="{{ item.media_type }}">
+                <input
+                  type="hidden"
+                  name="tmdb_id"
+                  value="{{ item.tmdb_id }}"
+                />
+                <input
+                  type="hidden"
+                  name="media_type"
+                  value="{{ item.media_type }}"
+                />
 
                 <button type="submit" class="menu-remove">
-                  <img src="/static/icons/trashcan.svg" alt="" aria-hidden="true">
+                  <img
+                    src="/static/icons/trashcan.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span>Remove from list</span>
                 </button>
               </form>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
 
       {% endfor %}
-
     </div>
 
     {% else %}
 
-    <p class="watchlist-empty">
-      Nothing here yet.
-    </p>
+    <div class="watchlist-empty">
+      <strong>Nothing here yet</strong>
+      <p>
+        Find a movie or TV show you'd like to watch and add it to your
+        watchlist.
+      </p>
+      <a href="/search" class="watchlist-empty-action">
+        Find something to watch
+      </a>
+    </div>
 
     {% endif %}
-
   </section>
-
 
   <!-- FINISHED -->
   <section class="watchlist-section">
-
     <h2>Finished</h2>
 
-    {% set finished = watchlist | selectattr("status", "equalto", "finished") | list %}
-
-    {% if finished %}
+    {% set finished = watchlist | selectattr("status", "equalto", "finished") |
+    list %} {% if finished %}
 
     <div class="watchlist-grid">
-
       {% for item in finished %}
 
       <div class="watchlist-card">
-
         <a href="/{{ item.media_type }}/{{ item.tmdb_id }}">
           <img
             src="https://image.tmdb.org/t/p/w200{{ item.poster_path }}"
@@ -228,72 +225,71 @@
         </a>
 
         <div class="watchlist-info">
-
           <h3>{{ item.title }}</h3>
 
-          <span class="watchlist-type">
-            {{ item.media_type | upper }}
-          </span>
-
+          <span class="watchlist-type"> {{ item.media_type | upper }} </span>
 
           <!-- ACTION MENU -->
           <div class="watchlist-menu">
-
             <button
               type="button"
               class="watchlist-menu-button"
               aria-label="More actions for {{ item.title }}"
               aria-expanded="false"
             >
-              <img
-                src="/static/icons/more.svg"
-                alt=""
-              />
+              <img src="/static/icons/more.svg" alt="" />
             </button>
 
             <div class="watchlist-menu-dropdown">
-
               <form method="post" action="/watchlist/status">
-                <input type="hidden" name="item_id" value="{{ item.id }}">
-                <input type="hidden" name="status" value="watching">
+                <input type="hidden" name="item_id" value="{{ item.id }}" />
+                <input type="hidden" name="status" value="watching" />
 
                 <button type="submit">
-                  <img src="/static/icons/rewatch.svg" alt="" aria-hidden="true">
+                  <img
+                    src="/static/icons/rewatch.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span>Watch Again</span>
                 </button>
               </form>
 
               <form method="post" action="/watchlist/remove">
-                <input type="hidden" name="tmdb_id" value="{{ item.tmdb_id }}">
-                <input type="hidden" name="media_type" value="{{ item.media_type }}">
+                <input
+                  type="hidden"
+                  name="tmdb_id"
+                  value="{{ item.tmdb_id }}"
+                />
+                <input
+                  type="hidden"
+                  name="media_type"
+                  value="{{ item.media_type }}"
+                />
 
                 <button type="submit" class="menu-remove">
-                  <img src="/static/icons/trashcan.svg" alt="" aria-hidden="true">
+                  <img
+                    src="/static/icons/trashcan.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                   <span>Remove from list</span>
                 </button>
               </form>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
 
       {% endfor %}
-
     </div>
 
     {% else %}
-
-    <p class="watchlist-empty">
-      You haven't finished anything yet.
-    </p>
-
+    <div class="watchlist-empty">
+      <strong>Nothing finished yet</strong>
+      <p>Titles you mark as finished will appear here.</p>
+    </div>
     {% endif %}
-
   </section>
-
 </div>
 {% endblock %}

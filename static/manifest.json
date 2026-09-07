@@ -1,0 +1,16 @@
+{
+  "name": "WatchFinder",
+  "short_name": "WatchFinder",
+  "description": "Find movies and TV shows and discover where to watch them.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f1ec",
+  "theme_color": "#f4f1ec",
+  "icons": [
+    {
+      "src": "/static/icons/App-Logo.png",
+      "sizes": "1200x1200",
+      "type": "image/png"
+    }
+  ]
+}

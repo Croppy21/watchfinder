@@ -4,11 +4,25 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+
 html,
 body {
   margin: 0;
   padding: 0;
-  padding-bottom: 72px;
+  padding-bottom: 76px;
+}
+
+a, button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
 }
 
 /* ---------- BASE ---------- */
@@ -76,13 +90,14 @@ h3 {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 64px;
+  height: auto;
   background: rgba(244, 241, 236, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  /* Ensures safe area padding for modern iPhones (notch/home bar) */
-  padding-bottom: env(safe-area-inset-bottom);
+  min-height: 64px;
+  padding-top: 6px;
+  padding-bottom: calc(6px + env(safe-area-inset-bottom));
 }
 /* ---------- Nav Icons ---------- */
 .nav-item {
@@ -118,6 +133,13 @@ h3 {
   color: #000000;
   font-weight: 700;
   transform: scale(0.94);
+}
+
+.nav-item:active {
+  transform: scale(0.92);
+}
+.nav-item.active:active {
+  transform: scale(0.90);
 }
 
 /* ---------- TOP NAVIGATION ---------- */
@@ -163,11 +185,6 @@ h3 {
   gap: 10px;
 }
 /* ---------- HOME HEADER ---------- */
-
-.home-header {
-  text-align: center;
-  padding: 45px 15px 35px;
-}
 
 .hero-logo {
   display: block;
@@ -393,7 +410,7 @@ small {
   text-align: left;
 }
 
-.autocomplete-item:active{
+.autocomplete-item:active {
   background: #3f6fe5;
 }
 .autocomplete-item:active .autocomplete-title,
@@ -1018,18 +1035,36 @@ button:active {
 /* ---------- EMPTY STATE ---------- */
 
 .watchlist-empty {
-  padding: 16px;
-
+  padding: 24px 18px;
   background: #ffffff;
-
   border: 1px dashed #d8d2ca;
-  border-radius: 12px;
-
-  color: #88817a;
-
+  border-radius: 14px;
+  color: #77716b;
   text-align: center;
 }
 
+.watchlist-empty strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #252525;
+  font-size: 17px;
+}
+
+.watchlist-empty p {
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+
+.watchlist-empty-action {
+  display: inline-block;
+  padding: 11px 18px;
+  background: #3f6fe5;
+  color: #ffffff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
 /* ---------- MENU ANIMATION ---------- */
 
 @keyframes watchlist-menu-in {
@@ -1480,7 +1515,6 @@ button:active {
   color: #b42318;
 }
 
-
 /* ---------- INSTALL PAGE ---------- */
 
 .install-section {
@@ -1587,6 +1621,20 @@ button:active {
   transform: scale(0.98);
 }
 
+.install-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.install-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 /* ----------  Home FEATURES ---------- */
 .feature-list {
   list-style: none;
@@ -1611,6 +1659,48 @@ button:active {
   content: "✓";
   margin-right: 8px;
   font-weight: 700;
+}
+
+/* ========================= ACCOUNT WELCOME PAGE ========================= */
+.auth-page .hero-logo {
+  display: block;
+  width: 180px;
+  max-width: 70%;
+  height: auto;
+  margin: 0 auto 24px;
+}
+.welcome-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.welcome-actions .auth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.welcome-actions .auth-footer {
+  margin: 4px 0 0;
+  text-align: center;
+}
+.continue-browsing {
+  margin-top: 8px;
+  color: inherit;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+.continue-browsing:hover {
+  opacity: 1;
+  text-decoration: underline;
 }
 
 /* ----------DESKTOP---------- */

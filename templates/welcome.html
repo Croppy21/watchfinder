@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
+%}
+
+<div class="auth-page">
+        <img src="/static/icons/Logo.svg" alt="Watch Finder" class="hero-logo" />
+  <div class="auth-header">
+
+    <h1>{{ title }}</h1>
+
+    <p>{{ message }}</p>
+  </div>
+
+  <div class="welcome-actions">
+    <a href="/register?next={{ next_url }}" class="auth-button">
+      Create account
+    </a>
+
+    <p class="auth-footer">
+      Already have an account?
+
+      <a href="/login?next={{ next_url }}"> Log in </a>
+    </p>
+
+    <a href="/" class="continue-browsing"> ← Continue browsing </a>
+  </div>
+</div>
+
+{% endblock %}

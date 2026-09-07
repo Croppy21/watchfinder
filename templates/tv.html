@@ -42,7 +42,10 @@
 
 {% endif %} {% else %}
 
-<a href="/login?next=/tv/{{ tv.id }}" class="watchlist-button">
+<a
+  href="/welcome?next=/tv/{{ tv.id }}&action=watchlist"
+  class="watchlist-button"
+>
   ＋ Add to Watchlist
 </a>
 

@@ -296,7 +296,7 @@ def watchlist(
 
     if not user:
         return RedirectResponse(
-            url="/login?next=/watchlist",
+            url="/welcome?next=/watchlist&action=watchlist",
             status_code=303
         )
 
@@ -390,7 +390,7 @@ def remove_from_watchlist(
 
     if not user:
         return RedirectResponse(
-            url="/login?next=/watchlist",
+            url="/welcome?next=/watchlist&action=watchlist",
             status_code=303
         )
 
@@ -428,7 +428,7 @@ def change_watchlist_status(
 
     if not user:
         return RedirectResponse(
-            url="/login?next=/watchlist",
+            url="/welcome?next=/watchlist&action=watchlist",
             status_code=303
         )
 
@@ -472,7 +472,7 @@ def profile(
 
     if not user:
         return RedirectResponse(
-            url="/login?next=/profile",
+            url="/welcome?next=/profile&action=profile",
             status_code=303
         )
 
@@ -584,11 +584,13 @@ def logout(request: Request):
 @app.get("/register", response_class=HTMLResponse)
 def register(request: Request):
 
+    next_url = request.query_params.get("next", "")
     return templates.TemplateResponse(
         request=request,
         name="register.html",
         context={
-            "request": request
+            "request": request,
+            "next_url": next_url
         }
     )
 
@@ -597,6 +599,7 @@ def register_user(
     request: Request,
     username: str = Form(...),
     email: str = Form(...),
+    next_url: str = Form(""),
     password: str = Form(...),
     db: Session = Depends(get_db)
 ):
@@ -614,7 +617,8 @@ def register_user(
                 "request": request,
                 "error": password_error,
                 "username": username,
-                "email": email
+                "email": email,
+                "next_url": next_url
             }
         )
 
@@ -641,7 +645,8 @@ def register_user(
                 "request": request,
                 "error": error,
                 "username": username,
-                "email": email
+                "email": email,
+                "next_url": next_url
             }
         )
 
@@ -666,6 +671,12 @@ def register_user(
         "success"
     )
 
+    if next_url:
+        return RedirectResponse(
+            url=next_url,
+            status_code=303
+        )
+    
     return RedirectResponse(
         url="/profile",
         status_code=303
@@ -923,7 +934,9 @@ def change_password(
         status_code=303
     )
     
-
+#-------------------------
+# INSTALL PAGE 
+#------------------------
 @app.get("/install", response_class=HTMLResponse)
 def install_page(request: Request):
     return templates.TemplateResponse(
@@ -931,5 +944,51 @@ def install_page(request: Request):
         name="install.html",
         context={
             "request": request
+        }
+    )
+    
+# -------------------------
+# ACCOUNT WELCOME PAGE
+# -------------------------
+@app.get("/welcome", response_class=HTMLResponse)
+def welcome(request: Request):
+
+    next_url = request.query_params.get("next", "/")
+    action = request.query_params.get("action", "account")
+
+    messages = {
+        "watchlist": {
+            "title": "Build your watchlist",
+            "message": (
+                "Create an account to save movies and TV shows "
+                "you want to watch."
+            )
+        },
+        "profile": {
+            "title": "Access your profile",
+            "message": (
+                "Create an account or log in to view and manage "
+                "your WatchFinder profile."
+            )
+        },
+        "account": {
+            "title": "Join WatchFinder",
+            "message": (
+                "Create an account to save your favourite movies "
+                "and TV shows."
+            )
+        }
+    }
+
+    content = messages.get(action, messages["account"])
+
+    return templates.TemplateResponse(
+        request=request,
+        name="welcome.html",
+        context={
+            "request": request,
+            "next_url": next_url,
+            "title": content["title"],
+            "message": content["message"]
         }
     )

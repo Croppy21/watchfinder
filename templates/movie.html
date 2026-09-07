@@ -3,7 +3,8 @@
 
 <div
   class="hero"
-  style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')">
+  style="background-image:url('https://image.tmdb.org/t/p/original{{ backdrop }}')"
+>
   <button id="back-btn" hx-get="/" hx-target="body">← Back</button>
 </div>
 
@@ -37,7 +38,10 @@
 
 {% endif %} {% else %}
 
-<a href="/login?next=/movie/{{ movie.id }}" class="watchlist-button">
+<a
+  href="/welcome?next=/movie/{{ movie.id }}&action=watchlist"
+  class="watchlist-button"
+>
   ＋ Add to Watchlist
 </a>
 

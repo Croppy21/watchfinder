@@ -8,10 +8,13 @@
   </div>
 
   {% if error %}
+
   <div class="auth-message error">{{ error }}</div>
   {% endif %}
 
   <form method="post" action="/register" class="auth-form">
+    <input type="hidden" name="next_url" value="{{ next_url or '' }}" />
+
     <div class="form-field">
       <label for="username">Username</label>
 
@@ -40,6 +43,7 @@
         value="{{ email or '' }}"
       />
     </div>
+
     <div class="form-field">
       <label for="password">Password</label>
 
@@ -52,17 +56,19 @@
         autocomplete="new-password"
         placeholder="Create a password"
       />
+
       <p class="form-hint">
         At least 8 characters, including an uppercase letter, lowercase letter,
         number and special character.
       </p>
     </div>
+
     <button type="submit" class="auth-button">Create account</button>
   </form>
 
   <p class="auth-footer">
     Already have an account?
-    <a href="/login">Log in</a>
+    <a href="/login?next={{ next_url or '' }}">Log in</a>
   </p>
 </div>
 
