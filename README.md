@@ -23,6 +23,7 @@ https://watchfinder-1.onrender.com/
 - View movie and TV show details
 - View available streaming providers
 - Create an account and log in
+- Password reset via email
 - Personal watchlist
 - Organise watchlist items into:
   - Currently Watching
@@ -56,13 +57,15 @@ I created WatchFinder as a personal software project to develop my skills in:
 - Responsive and mobile-first web design
 - Git and GitHub
 - Deploying and hosting a web application
-
+- Application health monitoring
+- Email and Password validate and administration intergration
 ## Tech Stack
 
 - **Python**
 - **FastAPI**
 - **SQLAlchemy**
 - **Supabase (PostgreSQL database)**
+- **Resend (password reset system)**
 - **HTML / Jinja2**
 - **CSS**
 - **JavaScript**
@@ -73,6 +76,11 @@ I created WatchFinder as a personal software project to develop my skills in:
 ## Deployment
 WatchFinder is hosted on **Render**, with **Supabase** used for the application's PostgreSQL database.
 
+Resend is used for password reset.
+
+The application includes a /health endpoint that checks whether the FastAPI application is responding successfully. An automated scheduled health check requests this endpoint to monitor the deployed service and help prevent/monitor the Render service from remaining inactive.
+
+A separate /db-health endpoint is also available to check connectivity to the PostgreSQL database.
 ## Run Locally
 
 ### Requirements
@@ -83,6 +91,7 @@ To run WatchFinder locally, you will need:
 - Git
 - A TMDB API key
 - A Supabase PostgreSQL database
+- Resend account and API key
 
 ### 1. Clone the repository
 ```bash
@@ -124,6 +133,8 @@ DATABASE_HOST=your_database_host
 DATABASE_PORT=your_database_port  
 DATABASE_NAME=your_database_name  
 SESSION_SECRET_KEY=your_secret_key_here  
+RESEND_API_KEY=re_your_actual_key_here
+APP_BASE_URL=http://127.0.0.1:8000
 
 Generate a long, random value for SESSION_SECRET_KEY.
 

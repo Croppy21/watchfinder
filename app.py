@@ -3,6 +3,9 @@ import os
 
 import re, random
 
+import hashlib
+import secrets
+
 from fastapi import FastAPI, HTTPException, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -11,8 +14,10 @@ from sqlalchemy import text
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
 from database.database import get_db
-from database.models import User, WatchlistItem
+from database.models import User, WatchlistItem, PasswordResetToken
 from utils.auth import hash_password, verify_password
+
+
 
 from services.tmdb import (
     search_multi,
@@ -569,6 +574,261 @@ def login_user(
     
     return RedirectResponse(
         url="/profile",
+        status_code=303
+    )
+
+# -------------------------
+# PASSWORD RESET
+# -------------------------
+
+@app.get("/forgot-password", response_class=HTMLResponse)
+def forgot_password(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="forgot_password.html",
+        context={
+            "request": request
+        }
+    )
+
+
+@app.post("/forgot-password", response_class=HTMLResponse)
+def forgot_password_request(
+    request: Request,
+    email: str = Form(...),
+    db: Session = Depends(get_db)
+):
+
+    email = email.strip().lower()
+
+    user = (
+        db.query(User)
+        .filter(User.email == email)
+        .first()
+    )
+
+    if user:
+
+        # Invalidate any existing unused reset tokens
+        existing_tokens = (
+            db.query(PasswordResetToken)
+            .filter(
+                PasswordResetToken.user_id == user.id,
+                PasswordResetToken.used_at.is_(None)
+            )
+            .all()
+        )
+
+        for old_token in existing_tokens:
+            old_token.used_at = datetime.now(timezone.utc)
+
+        # Generate a secure random token
+        raw_token = secrets.token_urlsafe(32)
+
+        # Store only the hash in the database
+        token_hash = hashlib.sha256(
+            raw_token.encode()
+        ).hexdigest()
+
+        expires_at = (
+            datetime.now(timezone.utc)
+            + timedelta(hours=1)
+        )
+
+        reset_token = PasswordResetToken(
+            user_id=user.id,
+            token_hash=token_hash,
+            expires_at=expires_at
+        )
+
+        db.add(reset_token)
+        db.commit()
+
+        # Build the reset link
+        base_url = os.getenv(
+            "APP_BASE_URL",
+            str(request.base_url).rstrip("/")
+        )
+
+        reset_url = (
+            f"{base_url}/reset-password"
+            f"?token={raw_token}"
+        )
+
+        from utils.email import send_password_reset_email
+
+        send_password_reset_email(
+            user.email,
+            reset_url
+        )
+
+    # Always show the same message, whether the email exists or not.
+    return templates.TemplateResponse(
+        request=request,
+        name="forgot_password.html",
+        context={
+            "request": request,
+            "success": (
+                "If an account with that email exists, "
+                "we've sent a password reset link."
+            )
+        }
+    )
+
+
+@app.get("/reset-password", response_class=HTMLResponse)
+def reset_password_page(
+    request: Request,
+    token: str,
+    db: Session = Depends(get_db)
+):
+
+    token_hash = hashlib.sha256(
+        token.encode()
+    ).hexdigest()
+
+    reset_token = (
+        db.query(PasswordResetToken)
+        .filter(
+            PasswordResetToken.token_hash == token_hash,
+            PasswordResetToken.used_at.is_(None),
+            PasswordResetToken.expires_at > datetime.now(timezone.utc)
+        )
+        .first()
+    )
+
+    if not reset_token:
+        return templates.TemplateResponse(
+            request=request,
+            name="reset_password.html",
+            context={
+                "request": request,
+                "error": (
+                    "This password reset link is invalid "
+                    "or has expired."
+                )
+            }
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="reset_password.html",
+        context={
+            "request": request,
+            "token": token
+        }
+    )
+
+
+@app.post("/reset-password", response_class=HTMLResponse)
+def reset_password(
+    request: Request,
+    token: str = Form(...),
+    new_password: str = Form(...),
+    confirm_password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+
+    token_hash = hashlib.sha256(
+        token.encode()
+    ).hexdigest()
+
+    reset_token = (
+        db.query(PasswordResetToken)
+        .filter(
+            PasswordResetToken.token_hash == token_hash,
+            PasswordResetToken.used_at.is_(None),
+            PasswordResetToken.expires_at > datetime.now(timezone.utc)
+        )
+        .first()
+    )
+
+    if not reset_token:
+        return templates.TemplateResponse(
+            request=request,
+            name="reset_password.html",
+            context={
+                "request": request,
+                "error": (
+                    "This password reset link is invalid "
+                    "or has expired."
+                )
+            }
+        )
+
+    if new_password != confirm_password:
+        return templates.TemplateResponse(
+            request=request,
+            name="reset_password.html",
+            context={
+                "request": request,
+                "token": token,
+                "error": "The new passwords do not match."
+            }
+        )
+
+    password_error = validate_password(new_password)
+
+    if password_error:
+        return templates.TemplateResponse(
+            request=request,
+            name="reset_password.html",
+            context={
+                "request": request,
+                "token": token,
+                "error": password_error
+            }
+        )
+
+    user = (
+        db.query(User)
+        .filter(User.id == reset_token.user_id)
+        .first()
+    )
+
+    if not user:
+        return templates.TemplateResponse(
+            request=request,
+            name="reset_password.html",
+            context={
+                "request": request,
+                "error": "Unable to reset the password."
+            }
+        )
+
+    # Update password
+    user.password_hash = hash_password(new_password)
+
+    # Mark this token as used
+    now = datetime.now(timezone.utc)
+    reset_token.used_at = now
+
+    # Invalidate any other reset tokens for this account
+    other_tokens = (
+        db.query(PasswordResetToken)
+        .filter(
+            PasswordResetToken.user_id == user.id,
+            PasswordResetToken.id != reset_token.id,
+            PasswordResetToken.used_at.is_(None)
+        )
+        .all()
+    )
+
+    for other_token in other_tokens:
+        other_token.used_at = now
+
+    db.commit()
+
+    set_flash(
+        request,
+        "Your password has been reset successfully. "
+        "You can now log in.",
+        "success"
+    )
+
+    return RedirectResponse(
+        url="/login",
         status_code=303
     )
 
