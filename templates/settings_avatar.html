@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "partials/top_nav.html" %}
+
+<div class="settings-page">
+
+    <div class="settings-header">
+        <h1>Avatar</h1>
+        <p>Choose a colour for your avatar.</p>
+    </div>
+
+    <div class="settings-card avatar-colour-card">
+
+        <div class="avatar-large-preview">
+            <div
+                class="profile-avatar"
+                style="background-color: {{ user.avatar_colour }};"
+            >
+                {{ user.username[0]|upper }}
+            </div>
+        </div>
+
+        <div class="avatar-colour-grid">
+
+            {% for colour in avatar_colours %}
+
+            <form method="post" action="/settings/avatar">
+                <input type="hidden" name="colour" value="{{ colour }}">
+
+                <button
+                    type="submit"
+                    class="avatar-colour-button {% if colour == user.avatar_colour %}selected{% endif %}"
+                    style="background-color: {{ colour }};"
+                    aria-label="Choose avatar colour"
+                >
+                    {% if colour == user.avatar_colour %}
+                        ✓
+                    {% endif %}
+                </button>
+
+            </form>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <div class="settings-card">
+        <a href="/settings" class="settings-row">
+            <div>
+                <strong>Back to Settings</strong>
+                <span>Return to account settings</span>
+            </div>
+
+            <span class="settings-arrow">‹</span>
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

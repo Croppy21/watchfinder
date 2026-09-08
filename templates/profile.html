@@ -3,7 +3,12 @@
 
 <div class="profile-page">
   <div class="profile-header">
-    <div class="profile-avatar">{{ user.username[0]|upper }}</div>
+    <div
+      class="profile-avatar"
+      style="background-color: {{ user.avatar_colour }};"
+    >
+      {{ user.username[0]|upper }}
+    </div>
 
     <h1>{{ user.username }}</h1>
 

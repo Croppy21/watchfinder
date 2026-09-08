@@ -1,10 +1,13 @@
 from datetime import datetime, timedelta, timezone
 import os
 
-from fastapi import FastAPI, Request, Form, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
+import re, random
+
+from fastapi import FastAPI, HTTPException, Request, Form, Depends
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy import text
 from starlette.middleware.sessions import SessionMiddleware
 from sqlalchemy.orm import Session
 from database.database import get_db
@@ -52,8 +55,6 @@ def set_flash(request: Request, message: str, category: str = "success"):
 # Password validation
 # -------------------------
 
-import re
-
 def validate_password(password: str) -> str | None:
     if len(password) < 8:
         return "Password must be at least 8 characters long."
@@ -71,6 +72,17 @@ def validate_password(password: str) -> str | None:
         return "Password must contain at least one special character."
 
     return None
+
+AVATAR_COLOURS = [
+    "#3f6fe5",
+    "#7c4dff",
+    "#00a896",
+    "#f28c28",
+    "#e05252",
+    "#d94f9d",
+    "#008cba",
+    "#6b8e23",
+]
 
 # -------------------------
 # AUTHENTICATION
@@ -541,6 +553,7 @@ def login_user(
 
     request.session["user_id"] = user.id
     request.session["username"] = user.username
+    request.session["avatar_colour"] = user.avatar_colour
 
     set_flash(
             request,
@@ -655,7 +668,8 @@ def register_user(
     user = User(
         username=username,
         email=email,
-        password_hash=hashed_password
+        password_hash=hashed_password,
+        avatar_colour=random.choice(AVATAR_COLOURS)
     )
 
     db.add(user)
@@ -664,6 +678,7 @@ def register_user(
 
     request.session["user_id"] = user.id
     request.session["username"] = user.username
+    request.session["avatar_colour"] = user.avatar_colour
 
     set_flash(
         request,
@@ -933,7 +948,48 @@ def change_password(
         url="/settings",
         status_code=303
     )
-    
+
+@app.get("/settings/avatar", response_class=HTMLResponse)
+def avatar_settings(request: Request, db: Session = Depends(get_db)):
+    user = get_current_user(request, db)
+
+    if not user:
+        return RedirectResponse("/login?next=/settings/avatar")
+
+    return templates.TemplateResponse(
+        request=request,
+        name="settings_avatar.html",
+        context={
+            "user": user,
+            "avatar_colours": AVATAR_COLOURS
+        }
+    )
+
+
+@app.post("/settings/avatar")
+def update_avatar(
+    request: Request,
+    colour: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    user = get_current_user(request, db)
+
+    if not user:
+        return RedirectResponse("/login?next=/settings/avatar")
+
+    if colour not in AVATAR_COLOURS:
+        raise HTTPException(status_code=400, detail="Invalid avatar colour")
+
+    user.avatar_colour = colour
+    db.commit()
+
+    request.session["avatar_colour"] = colour
+
+    return RedirectResponse(
+        "/settings/avatar",
+        status_code=303
+    )
+  
 #-------------------------
 # INSTALL PAGE 
 #------------------------
@@ -992,3 +1048,18 @@ def welcome(request: Request):
             "message": content["message"]
         }
     )
+       
+#-------------------------
+# health check endpoints
+#------------------------
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/db-health")
+def db_health(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "ok", "database": "connected"}
+    except Exception:
+        return {"status": "error", "database": "unavailable"}

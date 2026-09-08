@@ -8,7 +8,6 @@ html {
   scroll-behavior: smooth;
 }
 
-
 html,
 body {
   margin: 0;
@@ -16,8 +15,9 @@ body {
   padding-bottom: 76px;
 }
 
-a, button {
-    -webkit-tap-highlight-color: transparent;
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button,
@@ -139,7 +139,7 @@ h3 {
   transform: scale(0.92);
 }
 .nav-item.active:active {
-  transform: scale(0.90);
+  transform: scale(0.9);
 }
 
 /* ---------- TOP NAVIGATION ---------- */
@@ -250,8 +250,6 @@ h3 {
   height: 32px;
 
   border-radius: 50%;
-
-  background: #3f6fe5;
   color: #ffffff;
 
   font-size: 14px;
@@ -1514,7 +1512,55 @@ button:active {
 .settings-row.logout strong {
   color: #b42318;
 }
+.settings-avatar-preview {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
 
+.avatar-colour-card {
+  padding: 24px;
+}
+
+.avatar-large-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.avatar-colour-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.avatar-colour-grid form {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-colour-button {
+  width: 52px;
+  height: 52px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.avatar-colour-button.selected {
+  border-color: #222222;
+  box-shadow: 0 0 0 2px #ffffff;
+}
 /* ---------- INSTALL PAGE ---------- */
 
 .install-section {

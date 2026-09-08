@@ -1,69 +1,72 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-{% include "partials/top_nav.html" %}
+{% extends "base.html" %} {% block content %} {% include "partials/top_nav.html"
+%}
 
 <div class="settings-page">
+  <div class="settings-header">
+    <h1>Settings</h1>
+    <p>Manage your WatchFinder account.</p>
+  </div>
 
-    <div class="settings-header">
-        <h1>Settings</h1>
-        <p>Manage your WatchFinder account.</p>
-    </div>
+  <div class="settings-card">
+    <a href="/profile" class="settings-row">
+      <div>
+        <strong>Profile</strong>
+        <span>View your account information</span>
+      </div>
 
-    <div class="settings-card">
+      <span class="settings-arrow">›</span>
+    </a>
+    <a href="/settings/avatar" class="settings-row">
+      <div>
+        <strong>Avatar</strong>
+        <span>Change your avatar colour</span>
+      </div>
 
-        <a href="/profile" class="settings-row">
-            <div>
-                <strong>Profile</strong>
-                <span>View your account information</span>
-            </div>
+      <div
+        class="settings-avatar-preview"
+        style="background-color: {{ user.avatar_colour }};"
+      >
+        {{ user.username[0]|upper }}
+      </div>
+    </a>
+    <a href="/settings/username" class="settings-row">
+      <div>
+        <strong>Username</strong>
+        <span>{{ user.username }}</span>
+      </div>
 
-            <span class="settings-arrow">›</span>
-        </a>
+      <span class="settings-arrow">›</span>
+    </a>
 
-        <a href="/settings/username" class="settings-row">
-            <div>
-                <strong>Username</strong>
-                <span>{{ user.username }}</span>
-            </div>
+    <a href="/settings/email" class="settings-row">
+      <div>
+        <strong>Email</strong>
+        <span>{{ user.email }}</span>
+      </div>
 
-            <span class="settings-arrow">›</span>
-        </a>
+      <span class="settings-arrow">›</span>
+    </a>
 
-        <a href="/settings/email" class="settings-row">
-            <div>
-                <strong>Email</strong>
-                <span>{{ user.email }}</span>
-            </div>
+    <a href="/settings/password" class="settings-row">
+      <div>
+        <strong>Password</strong>
+        <span>Change your password</span>
+      </div>
 
-            <span class="settings-arrow">›</span>
-        </a>
+      <span class="settings-arrow">›</span>
+    </a>
+  </div>
 
-        <a href="/settings/password" class="settings-row">
-            <div>
-                <strong>Password</strong>
-                <span>Change your password</span>
-            </div>
+  <div class="settings-card">
+    <a href="/logout" class="settings-row logout">
+      <div>
+        <strong>Log out</strong>
+        <span>Sign out of your account</span>
+      </div>
 
-            <span class="settings-arrow">›</span>
-        </a>
-
-    </div>
-
-    <div class="settings-card">
-
-        <a href="/logout" class="settings-row logout">
-            <div>
-                <strong>Log out</strong>
-                <span>Sign out of your account</span>
-            </div>
-
-            <span class="settings-arrow">›</span>
-        </a>
-
-    </div>
-
+      <span class="settings-arrow">›</span>
+    </a>
+  </div>
 </div>
 
 {% endblock %}

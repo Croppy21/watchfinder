@@ -1,5 +1,4 @@
 <header class="top-nav">
-
   <a href="/" class="brand">
     <img src="/static/icons/Logo.svg" alt="Watch Finder" />
     <span>WatchFinder</span>
@@ -7,12 +6,14 @@
 
   <a href="/profile" class="profile-button">
     {% if request.session.get("user_id") %}
-      <span class="nav-avatar">
-        {{ request.session.get("username")[0]|upper }}
-      </span>
+    <span
+      class="nav-avatar"
+      style="background-color: {{ request.session.get('avatar_colour', '#3f6fe5') }};"
+    >
+      {{ request.session.get("username")[0]|upper }}
+    </span>
     {% else %}
-      <img src="/static/icons/profile.svg" alt="Profile" />
+    <img src="/static/icons/profile.svg" alt="Profile" />
     {% endif %}
   </a>
-
 </header>
