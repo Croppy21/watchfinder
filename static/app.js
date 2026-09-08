@@ -1,230 +1,176 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // ---------- SEARCH AUTOCOMPLETE ----------
 
-    // ---------- SEARCH AUTOCOMPLETE ----------
+  const input = document.getElementById("search");
+  const autocomplete = document.getElementById("autocomplete");
 
-    const input = document.getElementById("search");
-    const autocomplete = document.getElementById("autocomplete");
+  let index = -1;
 
-    let index = -1;
+  // Only run search keyboard functionality if search exists
+  if (input && autocomplete) {
+    const form = input.closest("form");
 
-    // Only run search keyboard functionality if search exists
-    if (input && autocomplete) {
+    document.addEventListener("keydown", (e) => {
+      const items = document.querySelectorAll(".autocomplete-item");
 
-        const form = input.closest("form");
+      if (!items.length) {
+        return;
+      }
 
-        document.addEventListener("keydown", (e) => {
+      // Arrow down
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
 
-            const items = document.querySelectorAll(".autocomplete-item");
+        index = Math.min(index + 1, items.length - 1);
+      }
 
-            if (!items.length) {
-                return;
+      // Arrow up
+      else if (e.key === "ArrowUp") {
+        e.preventDefault();
+
+        index = Math.max(index - 1, 0);
+      }
+
+      // Enter on highlighted suggestion
+      else if (e.key === "Enter" && index >= 0) {
+        e.preventDefault();
+
+        autocomplete.style.display = "none";
+        input.blur();
+
+        items[index].click();
+
+        return;
+      }
+
+      // Update selected item
+      items.forEach((item, i) => {
+        item.classList.toggle("selected", i === index);
+      });
+    });
+
+    // Hide autocomplete when normal search is submitted
+    if (form) {
+      form.addEventListener("submit", () => {
+        autocomplete.style.display = "none";
+
+        index = -1;
+      });
+    }
+  }
+
+  // ---------- WATCHLIST ACTION MENUS ----------
+
+  const watchlistMenus = document.querySelectorAll(".watchlist-menu");
+
+  // Only initialise this functionality on pages
+  // that actually contain watchlist menus
+  if (watchlistMenus.length) {
+    document.addEventListener("click", (event) => {
+      const menuButton = event.target.closest(".watchlist-menu-button");
+
+      // -------------------------
+      // MENU BUTTON
+      // -------------------------
+
+      if (menuButton) {
+        event.preventDefault();
+
+        const menu = menuButton.closest(".watchlist-menu");
+
+        const dropdown = menu.querySelector(".watchlist-menu-dropdown");
+
+        // Close all other menus
+        document
+          .querySelectorAll(".watchlist-menu-dropdown.open")
+          .forEach((openMenu) => {
+            if (openMenu !== dropdown) {
+              openMenu.classList.remove("open");
+
+              const otherButton = openMenu
+                .closest(".watchlist-menu")
+                .querySelector(".watchlist-menu-button");
+
+              otherButton.setAttribute("aria-expanded", "false");
             }
+          });
 
-            // Arrow down
-            if (e.key === "ArrowDown") {
-                e.preventDefault();
+        // Toggle current menu
+        const isOpen = dropdown.classList.toggle("open");
 
-                index = Math.min(
-                    index + 1,
-                    items.length - 1
-                );
-            }
+        menuButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
 
-            // Arrow up
-            else if (e.key === "ArrowUp") {
-                e.preventDefault();
+        return;
+      }
 
-                index = Math.max(
-                    index - 1,
-                    0
-                );
-            }
+      // -------------------------
+      // CLICKED MENU ACTION
+      // -------------------------
 
-            // Enter on highlighted suggestion
-            else if (e.key === "Enter" && index >= 0) {
+      const menuAction = event.target.closest(
+        ".watchlist-menu-dropdown button",
+      );
 
-                e.preventDefault();
+      if (menuAction) {
+        const menu = menuAction.closest(".watchlist-menu");
 
-                autocomplete.style.display = "none";
-                input.blur();
+        const dropdown = menu.querySelector(".watchlist-menu-dropdown");
 
-                items[index].click();
+        const button = menu.querySelector(".watchlist-menu-button");
 
-                return;
-            }
+        dropdown.classList.remove("open");
 
-            // Update selected item
-            items.forEach((item, i) => {
+        button.setAttribute("aria-expanded", "false");
 
-                item.classList.toggle(
-                    "selected",
-                    i === index
-                );
+        return;
+      }
 
-            });
+      // -------------------------
+      // CLICKED OUTSIDE MENU
+      // -------------------------
 
-        });
+      if (!event.target.closest(".watchlist-menu")) {
+        document
+          .querySelectorAll(".watchlist-menu-dropdown.open")
+          .forEach((dropdown) => {
+            dropdown.classList.remove("open");
 
+            const button = dropdown
+              .closest(".watchlist-menu")
+              .querySelector(".watchlist-menu-button");
 
-        // Hide autocomplete when normal search is submitted
-        if (form) {
+            button.setAttribute("aria-expanded", "false");
+          });
+      }
+    });
+  }
+  // ---------- AUTH FORM SUBMISSIONS ----------
 
-            form.addEventListener("submit", () => {
+  const authForms = document.querySelectorAll(".auth-form");
 
-                autocomplete.style.display = "none";
+  if (authForms.length) {
+    authForms.forEach((form) => {
+      form.addEventListener("submit", () => {
+        const button = form.querySelector("button[type='submit']");
 
-                index = -1;
-
-            });
-
+        if (!button) {
+          return;
         }
 
-    }
+        // Prevent accidental double submissions
+        button.disabled = true;
 
+        // Show immediate feedback
+        const buttonText = button.textContent.trim();
 
-    // ---------- WATCHLIST ACTION MENUS ----------
-
-    const watchlistMenus = document.querySelectorAll(
-        ".watchlist-menu"
-    );
-
-    // Only initialise this functionality on pages
-    // that actually contain watchlist menus
-    if (watchlistMenus.length) {
-
-        document.addEventListener("click", (event) => {
-
-            const menuButton = event.target.closest(
-                ".watchlist-menu-button"
-            );
-
-
-            // -------------------------
-            // MENU BUTTON
-            // -------------------------
-
-            if (menuButton) {
-
-                event.preventDefault();
-
-                const menu = menuButton.closest(
-                    ".watchlist-menu"
-                );
-
-                const dropdown = menu.querySelector(
-                    ".watchlist-menu-dropdown"
-                );
-
-
-                // Close all other menus
-                document
-                    .querySelectorAll(
-                        ".watchlist-menu-dropdown.open"
-                    )
-                    .forEach((openMenu) => {
-
-                        if (openMenu !== dropdown) {
-
-                            openMenu.classList.remove("open");
-
-                            const otherButton =
-                                openMenu
-                                    .closest(".watchlist-menu")
-                                    .querySelector(
-                                        ".watchlist-menu-button"
-                                    );
-
-                            otherButton.setAttribute(
-                                "aria-expanded",
-                                "false"
-                            );
-
-                        }
-
-                    });
-
-
-                // Toggle current menu
-                const isOpen =
-                    dropdown.classList.toggle("open");
-
-
-                menuButton.setAttribute(
-                    "aria-expanded",
-                    isOpen ? "true" : "false"
-                );
-
-                return;
-            }
-
-
-            // -------------------------
-            // CLICKED MENU ACTION
-            // -------------------------
-
-            const menuAction = event.target.closest(
-                ".watchlist-menu-dropdown button"
-            );
-
-
-            if (menuAction) {
-
-                const menu = menuAction.closest(
-                    ".watchlist-menu"
-                );
-
-                const dropdown = menu.querySelector(
-                    ".watchlist-menu-dropdown"
-                );
-
-                const button = menu.querySelector(
-                    ".watchlist-menu-button"
-                );
-
-
-                dropdown.classList.remove("open");
-
-                button.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                return;
-            }
-
-
-            // -------------------------
-            // CLICKED OUTSIDE MENU
-            // -------------------------
-
-            if (!event.target.closest(".watchlist-menu")) {
-
-                document
-                    .querySelectorAll(
-                        ".watchlist-menu-dropdown.open"
-                    )
-                    .forEach((dropdown) => {
-
-                        dropdown.classList.remove("open");
-
-                        const button =
-                            dropdown
-                                .closest(".watchlist-menu")
-                                .querySelector(
-                                    ".watchlist-menu-button"
-                                );
-
-                        button.setAttribute(
-                            "aria-expanded",
-                            "false"
-                        );
-
-                    });
-
-            }
-
-        });
-
-    }
-
+        if (buttonText === "Log in") {
+          button.textContent = "Logging in...";
+        } else if (buttonText === "Send reset link") {
+          button.textContent = "Sending...";
+        } else if (buttonText === "Reset password") {
+          button.textContent = "Resetting...";
+        }
+      });
+    });
+  }
 });
