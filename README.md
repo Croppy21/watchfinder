@@ -186,9 +186,11 @@ Enter your computer's local IP address followed by port 8000:
 
 http://YOUR_LOCAL_IP:8000
 
-For example:
+To find you local IP:
+go to terminal and type ```ipconfig``` and look at IPv4 Address
 
-http://192.168.1.25:8000
+For example:
+http://192.168.1.x:8000
 
 Your phone and computer must remain connected to the same network while testing locally.
 
@@ -209,5 +211,7 @@ User account and watchlist data is stored in a Supabase PostgreSQL database.
 WatchFinder is a completed personal software development project.
 
 The current version represents the final planned feature set. Minor UI fixes, maintenance and refinements may still be made, but no additional major features are currently planned.
+
+Security fixes, bugs and random features (when I feel like it) will be made when needed.
 
 Built as a personal software development project.
