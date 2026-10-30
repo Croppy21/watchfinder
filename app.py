@@ -201,6 +201,15 @@ def movie(
 ):
 
     movie = get_movie(movie_id)
+    
+    selected_country = request.query_params.get("country")
+    if selected_country:
+        country = selected_country.upper()
+    elif user and user.preferred_country:
+        country = user.preferred_country
+    else:
+        country = "AU"
+    
     providers = get_watch_providers(movie_id)
 
     watchlist_item = None
@@ -224,7 +233,8 @@ def movie(
             "movie": movie,
             "poster": poster_url(movie.get("poster_path")),
             "backdrop": movie.get("backdrop_path"),
-            "providers_html": build_providers_html(providers),
+            "providers_html": build_providers_html(providers, country),
+            "country": country,
             "user": user,
             "watchlist_item": watchlist_item
         }
@@ -244,6 +254,13 @@ def tv(
 ):
 
     tv = get_tv_show(tv_id)
+    selected_country = request.query_params.get("country")
+    if selected_country:
+        country = selected_country.upper()
+    elif user and user.preferred_country:
+        country = user.preferred_country
+    else:
+        country = "AU"
     providers = get_tv_watch_providers(tv_id)
 
     watchlist_item = None
@@ -267,7 +284,8 @@ def tv(
             "tv": tv,
             "poster": poster_url(tv.get("poster_path")),
             "backdrop": tv.get("backdrop_path"),
-            "providers_html": build_providers_html(providers),
+            "providers_html": build_providers_html(providers, country),
+            "country": country,
             "user": user,
             "watchlist_item": watchlist_item
         }
@@ -874,6 +892,7 @@ def register_user(
     email: str = Form(...),
     next_url: str = Form(""),
     password: str = Form(...),
+    preferred_country: str = Form("AU"),
     db: Session = Depends(get_db)
 ):
 
@@ -929,6 +948,7 @@ def register_user(
         username=username,
         email=email,
         password_hash=hashed_password,
+        preferred_country=preferred_country,
         avatar_colour=random.choice(AVATAR_COLOURS)
     )
 
@@ -1323,3 +1343,73 @@ def db_health(db: Session = Depends(get_db)):
         return {"status": "ok", "database": "connected"}
     except Exception:
         return {"status": "error", "database": "unavailable"}
+    
+    
+#-------------------------
+# COUNTRY PREFERENCE
+#------------------------
+@app.get("/settings/country", response_class=HTMLResponse)
+def change_country_page(
+    request: Request,
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/country",
+            status_code=303
+        )
+
+    return templates.TemplateResponse(
+        request=request,
+        name="settings_country.html",
+        context={
+            "request": request,
+            "user": user
+        }
+    )
+
+@app.post("/settings/country", response_class=HTMLResponse)
+def change_country(
+    request: Request,
+    preferred_country: str = Form(...),
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user)
+):
+    if not user:
+        return RedirectResponse(
+            url="/login?next=/settings/country",
+            status_code=303
+        )
+
+    allowed_countries = {
+        "AU", "CA", "FR", "DE", "IE", "IL",
+        "IT", "JP", "NZ", "ES", "GB", "US"
+    }
+
+    preferred_country = preferred_country.upper()
+
+    if preferred_country not in allowed_countries:
+        return templates.TemplateResponse(
+            request=request,
+            name="settings_country.html",
+            context={
+                "request": request,
+                "user": user,
+                "error": "Please select a valid country."
+            },
+            status_code=400
+        )
+
+    user.preferred_country = preferred_country
+    db.commit()
+
+    set_flash(
+        request,
+        "Preferred country updated successfully.",
+        "success"
+    )
+
+    return RedirectResponse(
+        url="/settings",
+        status_code=303
+    )

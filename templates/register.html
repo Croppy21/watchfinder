@@ -43,6 +43,25 @@
         value="{{ email or '' }}"
       />
     </div>
+    <div class="form-field">
+      <div class="country-selector">
+        <label for="preferred_country"> Where you watching from?</label>
+        <select id="preferred_country" name="preferred_country" required>
+          <option value="AU" selected>Australia</option>
+          <option value="CA">Canada</option>
+          <option value="FR">France</option>
+          <option value="DE">Germany</option>
+          <option value="IE">Ireland</option>
+          <option value="IL">Israel</option>
+          <option value="IT">Italy</option>
+          <option value="JP">Japan</option>
+          <option value="NZ">New Zealand</option>
+          <option value="ES">Spain</option>
+          <option value="GB">United Kingdom</option>
+          <option value="US">United States</option>
+        </select>
+      </div>
+    </div>
 
     <div class="form-field">
       <label for="password">Password</label>

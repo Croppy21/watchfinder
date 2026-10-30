@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "partials/top_nav.html" %}
+
+<div class="auth-page">
+
+    <div class="auth-header">
+        <h1>Preferred country</h1>
+        <p>Choose the country whose streaming availability you want to see.</p>
+    </div>
+
+    {% if error %}
+    <div class="auth-message error">{{ error }}</div>
+    {% endif %}
+
+    {% if success %}
+    <div class="auth-message success">{{ success }}</div>
+    {% endif %}
+
+    <div class="country-selector">
+    <form method="post" action="/settings/country" class="auth-form">
+
+        <div class="form-field">
+            <label for="preferred_country">Preferred streaming country</label>
+
+            <select
+                id="preferred_country"
+                name="preferred_country"
+                required
+            >
+                <option value="AU" {% if user.preferred_country == "AU" %}selected{% endif %}>Australia</option>
+                <option value="CA" {% if user.preferred_country == "CA" %}selected{% endif %}>Canada</option>
+                <option value="FR" {% if user.preferred_country == "FR" %}selected{% endif %}>France</option>
+                <option value="DE" {% if user.preferred_country == "DE" %}selected{% endif %}>Germany</option>
+                <option value="IE" {% if user.preferred_country == "IE" %}selected{% endif %}>Ireland</option>
+                <option value="IL" {% if user.preferred_country == "IL" %}selected{% endif %}>Israel</option>
+                <option value="IT" {% if user.preferred_country == "IT" %}selected{% endif %}>Italy</option>
+                <option value="JP" {% if user.preferred_country == "JP" %}selected{% endif %}>Japan</option>
+                <option value="NZ" {% if user.preferred_country == "NZ" %}selected{% endif %}>New Zealand</option>
+                <option value="ES" {% if user.preferred_country == "ES" %}selected{% endif %}>Spain</option>
+                <option value="GB" {% if user.preferred_country == "GB" %}selected{% endif %}>United Kingdom</option>
+                <option value="US" {% if user.preferred_country == "US" %}selected{% endif %}>United States</option>
+            </select>
+        </div>
+
+        <button type="submit" class="auth-button">
+            Save country
+        </button>
+
+    </form>
+    </div>
+    <p class="auth-footer">
+        <a href="/settings">Back to settings</a>
+    </p>
+
+</div>
+
+{% endblock %}

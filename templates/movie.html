@@ -46,7 +46,22 @@
 </a>
 
 {% endif %}
-
-<h3>Where to watch (AU)</h3>
+<h2 id="where-to-watch">Where to watch</h2>
+<form method="get" action="/movie/{{ movie.id }}" class="country-selector">
+    <select id="country" name="country" onchange="this.form.submit()">
+        <option value="AU" {% if country == "AU" %}selected{% endif %}>Australia</option>
+        <option value="CA" {% if country == "CA" %}selected{% endif %}>Canada</option>
+        <option value="FR" {% if country == "FR" %}selected{% endif %}>France</option>
+        <option value="DE" {% if country == "DE" %}selected{% endif %}>Germany</option>
+        <option value="IE" {% if country == "IE" %}selected{% endif %}>Ireland</option>
+        <option value="IL" {% if country == "IL" %}selected{% endif %}>Israel</option>
+        <option value="IT" {% if country == "IT" %}selected{% endif %}>Italy</option>
+        <option value="JP" {% if country == "JP" %}selected{% endif %}>Japan</option>
+        <option value="NZ" {% if country == "NZ" %}selected{% endif %}>New Zealand</option>
+        <option value="ES" {% if country == "ES" %}selected{% endif %}>Spain</option>
+        <option value="GB" {% if country == "GB" %}selected{% endif %}>United Kingdom</option>
+        <option value="US" {% if country == "US" %}selected{% endif %}>United States</option>
+    </select>
+</form>
 
 {{ providers_html | safe }} {% endblock %}

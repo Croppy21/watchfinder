@@ -38,7 +38,12 @@ class User(Base):
     nullable=False,
     default="#3f6fe5"
 )
-
+    preferred_country: Mapped[str] = mapped_column(
+        String(2),
+        nullable=False,
+        default="AU"
+    )
+    
     created_at: Mapped[datetime] = mapped_column(
     DateTime(timezone=True),
     default=lambda: datetime.now(timezone.utc),

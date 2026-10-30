@@ -88,12 +88,35 @@ def normalize_provider_name(name: str) -> str:
     return name
 
 
-def build_providers_html(providers_data):
-    au = providers_data.get("results", {}).get("AU")
-
-    if not au:
-        return "<p><i>No streaming data available in Australia.</i></p>"
-
+def build_providers_html(providers_data, country="AU"):
+    country_names = {
+        "AU": "Australia",
+        "US": "United States",
+        "GB": "United Kingdom",
+        "CA": "Canada",
+        "NZ": "New Zealand",
+        "DE": "Germany",
+        "FR": "France",
+        "IT": "Italy",
+        "ES": "Spain",
+        "JP": "Japan",
+        "IN": "India",
+        "IL": "Israel",
+    }
+    
+    country = country.upper()
+    
+    
+    if country not in country_names:
+        country = "AU"
+    
+    region = providers_data.get("results", {}).get(country)
+    
+    if not region:
+        return (
+            f"<p><i>No streaming data found in "
+            f"{country_names[country]}.</i></p>"
+        )
     html = ""
 
     for key, label in {
@@ -102,13 +125,13 @@ def build_providers_html(providers_data):
         "buy": "Buy"
     }.items():
 
-        if key not in au:
+        if key not in region:
             continue
 
         seen = set()
         section = ""
 
-        for p in au[key]:
+        for p in region[key]:
             name = normalize_provider_name(p["provider_name"])
 
             if name in seen:
