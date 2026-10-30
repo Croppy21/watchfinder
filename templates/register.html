@@ -47,15 +47,41 @@
     <div class="form-field">
       <label for="password">Password</label>
 
-      <input
-        type="password"
-        id="password"
-        name="password"
-        required
-        minlength="8"
-        autocomplete="new-password"
-        placeholder="Create a password"
-      />
+      <div class="password-input-wrap">
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="Create a password"
+        />
+        <button
+          type="button"
+          class="password-toggle"
+          aria-label="Show password"
+          aria-controls="password"
+          aria-pressed="false"
+        >
+          <svg
+            class="password-eye-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
+      </div>
 
       <p class="form-hint">
         At least 8 characters, including an uppercase letter, lowercase letter,

@@ -173,4 +173,51 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  /* ---------- PASSWORD VISIBILITY TOGGLE ---------- */
+
+  document.querySelectorAll(".password-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const inputId = button.getAttribute("aria-controls");
+      const passwordInput = document.getElementById(inputId);
+
+      if (!passwordInput) return;
+
+      const shouldShow = passwordInput.type === "password";
+
+      passwordInput.type = shouldShow ? "text" : "password";
+
+      button.innerHTML = shouldShow
+        ? `
+        <svg class="password-eye-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="22" height="22" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"
+          aria-hidden="true">
+          <path d="M3 3l18 18" />
+          <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+          <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.8 15.8 0 0 1-4 4.8" />
+          <path d="M6.6 6.6C3.6 8.5 2 12 2 12s3.6 7 10 7c1.5 0 2.8-.3 4-.9" />
+        </svg>
+      `
+        : `
+        <svg class="password-eye-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="22" height="22" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"
+          aria-hidden="true">
+          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      `;
+
+      button.setAttribute(
+        "aria-label",
+        shouldShow ? "Hide password" : "Show password",
+      );
+      button.setAttribute("aria-pressed", String(shouldShow));
+    });
+  });
 });

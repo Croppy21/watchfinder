@@ -1810,3 +1810,46 @@ button:active {
     scroll-behavior: auto !important;
   }
 }
+
+
+
+/* ---------- PASSWORD VISIBILITY TOGGLE ---------- */
+
+.password-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrap input {
+  box-sizing: border-box;
+  padding-right: 76px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #3f6fe5;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.password-toggle:hover {
+  background: #f2efeb;
+}
+
+.password-toggle:active {
+  transform: translateY(-50%);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #4f7cff;
+  outline-offset: 2px;
+}
